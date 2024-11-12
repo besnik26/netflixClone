@@ -1,0 +1,22 @@
+<div class="cover">
+    <div class="cover-div">
+        @if (searchResults.length > 0) {
+        <h2>Search Results for "{{ query }}"</h2>
+
+        <div class="main">
+            @for (movie of searchResults; track $index) {
+            @if (movie.poster_path) {
+            <div class="movie-card" (click)="onMovieSelect(movie)">
+                <img [src]="'https://image.tmdb.org/t/p/w200' + movie.poster_path" alt="{{ movie.title }} poster" />
+            </div>
+            }
+            }
+        </div>
+        }
+    </div>
+</div>
+
+@if (selectedMovie) {
+<app-movie-modal [movie]="selectedMovie" [genres]="genres" [cast]="cast" (close)="closeModal()">
+</app-movie-modal>
+}

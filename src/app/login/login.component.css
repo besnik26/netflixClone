@@ -1,0 +1,164 @@
+.main {
+    display: flex;
+    justify-content: center;
+    padding-top: 200px;
+}
+
+.login-container {
+    max-width: 450px;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    height: 500px;
+    min-height: 607px;
+    padding: 48px 68px;
+}
+
+.login-form {
+    display: flex;
+    flex-direction: column;
+}
+
+h1 {
+    color: white;
+}
+
+.sign-in {
+    width: 100%;
+    height: 54px;
+    border-radius: 4px;
+    border: none;
+    background-color: #e50914;
+    color: white;
+    font-size: 16px;
+    font-weight: 600;
+    margin-top: 20px;
+    cursor: pointer;
+}
+
+.error {
+    font-size: 12px;
+    color: orange;
+    margin-top: 4px;
+}
+
+.example-container mat-form-field+mat-form-field {
+    margin-left: 8px;
+}
+
+.example-right-align {
+    text-align: right;
+}
+
+input.example-right-align::-webkit-outer-spin-button,
+input.example-right-align::-webkit-inner-spin-button {
+    display: none;
+}
+
+input.example-right-align {
+    -moz-appearance: textfield;
+}
+
+
+.mat-mdc-form-field {
+    margin-top: 20px;
+    border-radius: 4px !important;
+}
+
+::ng-deep .mdc-text-field--filled:not(.mdc-text-field--disabled) {
+    background-color: gray !important;
+}
+
+::ng-deep .mat-mdc-form-field-icon-suffix button {
+    background-color: transparent;
+    border: none;
+    margin-right: 10px;
+}
+
+::ng-deep .mdc-text-field--filled.mdc-text-field--invalid:not(.mdc-text-field--disabled) .mdc-floating-label {
+    color: orange;
+}
+
+::ng-deep .mdc-text-field--filled:not(.mdc-text-field--disabled) .mdc-floating-label,
+.mdc-text-field--filled:not(.mdc-text-field--disabled) .mdc-floating-label--float-above {
+    color: lightgray !important;
+}
+
+::ng-deep .mdc-text-field--filled.mdc-text-field--invalid:not(.mdc-text-field--disabled) .mdc-floating-label,
+.mdc-text-field--filled.mdc-text-field--invalid:not(.mdc-text-field--disabled) .mdc-floating-label--float-above {
+    color: orange !important;
+}
+
+::ng-deep .mdc-text-field--filled.mdc-text-field--invalid:not(.mdc-text-field--disabled) .mdc-line-ripple::before {
+    border-bottom-color: orange !important;
+}
+
+::ng-deep .mdc-text-field--filled.mdc-text-field--invalid:not(.mdc-text-field--disabled) .mdc-line-ripple::after {
+    border-bottom-color: orange !important;
+}
+
+::ng-deep .mdc-text-field--filled:not(.mdc-text-field--disabled) .mdc-line-ripple::after {
+    border-bottom-color: gray !important;
+}
+
+::ng-deep .mdc-text-field--filled.mdc-text-field--invalid:not(.mdc-text-field--disabled) .mdc-text-field__input {
+    caret-color: white !important;
+}
+
+::ng-deep .mdc-text-field--filled:not(.mdc-text-field--disabled) .mdc-text-field__input {
+    caret-color: white !important;
+}
+
+::ng-deep .mdc-text-field--filled:not(.mdc-text-field--disabled) .mdc-text-field__input {
+    color: white !important;
+}
+
+::ng-deep .mat-mdc-form-field-subscript-wrapper,
+.mat-mdc-form-field-bottom-align::before {
+    display: none;
+}
+
+
+
+.checkbox-div {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+    color: gray;
+}
+
+#checkbox {
+    cursor: pointer;
+}
+
+.checkbox-div p {
+    cursor: pointer;
+}
+
+.checkbox-div label {
+    cursor: pointer;
+}
+
+.new-to-netflix {
+    color: gray;
+}
+
+.new-to-netflix h3 {
+    font-size: 16px;
+    font-weight: 400;
+    margin: 60px 0 15px 0;
+}
+
+.new-to-netflix p {
+    font-size: 14px;
+}
+
+.sign-up-span {
+    color: white;
+    cursor: pointer;
+}
+
+.learn {
+    color: blue;
+    text-decoration: underline;
+    cursor: pointer;
+}

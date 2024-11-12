@@ -1,0 +1,16 @@
+.main {
+    width: 100%;
+    height: auto;
+    background-color: #000000;
+    padding-top: 100px;
+}
+
+.cover {
+    display: flex;
+    justify-content: center;
+
+}
+
+.cover-div {
+    max-width: 1550px;
+}

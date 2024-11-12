@@ -1,0 +1,42 @@
+<div class="main">
+    <div class="login-container">
+        <form [formGroup]="myForm">
+
+            <div class="login-form">
+                <h1>Sign In</h1>
+                <mat-form-field>
+                    <mat-label>Email or mobile number</mat-label>
+                    <input matInput formControlName="email">
+                </mat-form-field>
+                @if(myForm.get('email')?.touched && myForm.get('email')?.invalid){
+                <span class="error">Please enter a valid email</span>
+                }
+
+                <mat-form-field>
+                    <mat-label>Password</mat-label>
+                    <input matInput [type]="hide() ? 'password' : 'text'" formControlName="password" />
+                    <button type="button" mat-icon-button matSuffix (click)="clickEvent($event)"
+                        [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide()">
+                        <mat-icon>{{hide() ? 'visibility_off' : 'visibility'}}</mat-icon>
+                    </button>
+                </mat-form-field>
+                @if(myForm.get('password')?.touched && myForm.get('password')?.invalid){
+                <span class="error">Incorrect password</span>
+                }
+
+                <button type="button" class="sign-in" (click)="onSubmit()">Sign In</button>
+                <div class="checkbox-div">
+                    <div><input type="checkbox" id="checkbox"> <label for="checkbox">Remember me</label></div>
+                    <p>Need help ?</p>
+                </div>
+
+                <div class="new-to-netflix">
+                    <h3>New to Netflix? <span class="sign-up-span">Sign up now.</span></h3>
+
+                    <p>This page is protected by Google reCAPTCHA to ensure you're not a bot. <span class="learn">Learn
+                            more.</span></p>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

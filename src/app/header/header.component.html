@@ -1,0 +1,32 @@
+@if(currentRoute==='home'){
+
+<div class="main">
+    <img src="../../assets/logo.png" alt="logo" class="logo">
+</div>
+}
+
+@if(currentRoute !=='home'){
+<div class="main-2">
+    <div class="left-div">
+        <img src="../../assets/logo.png" alt="logo" class="logo-browse">
+        <ul>
+            <li class="active" [routerLink]="'/browse'">Home</li>
+            <li>TV Shows</li>
+            <li>Movies</li>
+            <li>Latest</li>
+            <li>My List</li>
+            <li>Browse by Languages</li>
+        </ul>
+    </div>
+    <div class="right-div">
+        <form [formGroup]="myForm">
+            <div class="search-div">
+                <input type="text" placeholder="Search for movies" formControlName="search" (keyup.enter)="onSubmit()">
+                <img src="../../assets/icons/search-icon.svg" alt="">
+            </div>
+        </form>
+        <p>Children</p>
+        <p>profile pic</p>
+    </div>
+</div>
+}

@@ -1,0 +1,30 @@
+.cover {
+    display: flex;
+    justify-content: center;
+
+}
+
+.cover-div {
+    max-width: 1550px;
+}
+
+
+.main {
+    display: flex;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    column-gap: 29px;
+    row-gap: 29px;
+    padding: 120px 48px 0 48px;
+}
+
+.movie-card {
+    max-width: 175px;
+    color: white;
+}
+
+.movie-card img {
+    width: 175px;
+    height: auto;
+    border-radius: 5px;
+}

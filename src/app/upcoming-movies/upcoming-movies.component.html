@@ -1,0 +1,18 @@
+<div class="main">
+    @if(upcomingMovies.length > 0){
+    <p>Upcoming Movies </p>
+    <div #swiperContainer class="swiper mySwiper">
+        <div class="swiper-wrapper">
+            @for (movie of upcomingMovies; track $index) {
+            <div class="swiper-slide">
+                <div>
+
+                    <img [src]="'https://image.tmdb.org/t/p/w200/' + movie.poster_path"
+                        alt="{{ movie.title || movie.name }}">
+                </div>
+            </div>
+            }
+        </div>
+    </div>
+    }
+</div>
