@@ -40,7 +40,7 @@ export class SearchPageComponent implements OnInit {
     });
 
     this.tmdbService.getMovieCredits(movieId).subscribe(credits => {
-      this.cast = credits.cast.slice(0, 10);
+      this.cast = credits.cast.slice(0, 5);
     });
   }
 
@@ -69,5 +69,6 @@ export class SearchPageComponent implements OnInit {
       }
     );
   }
+
 
 }

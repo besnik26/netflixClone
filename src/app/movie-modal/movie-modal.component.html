@@ -1,8 +1,8 @@
 <div class="modal-overlay" (click)="onClose()"></div>
-<div class="modal">
-    <button class="close-button" (click)="onClose()">✖</button>
+<div #modal class="modal">
+    <button class="close-button" (click)="onClose()"><img src="../../assets/icons/close-icon.svg" alt=""></button>
 
-    <h2>{{ movie.title }}</h2>
+
 
     @if (movie.trailerUrl) {
     <div>
@@ -12,24 +12,48 @@
         </iframe>
     </div>
     }@else {
-    <img [src]="'https://image.tmdb.org/t/p/w500' + movie.poster_path" alt="{{ movie.title }} poster" />
+    <div class="img-div">
+        <img class="movie-img" [src]="'https://image.tmdb.org/t/p/w500' + movie.poster_path"
+            alt="{{ movie.title }} poster" />
+    </div>
     }
-    <p><strong>Release Date:</strong> {{ movie.release_date }}</p>
-    <p><strong>Description:</strong> {{ movie.overview }}</p>
+    <div class="details-encapsulation">
+        <h2>{{ movie.title }}</h2>
+        <div class="details-div">
+            <div class="details">
+                <p><strong>Release Date:</strong> {{ movie.release_date }}</p>
+                <p><strong>Description:</strong> {{ movie.overview }}</p>
+            </div>
 
-    @if (genres.length > 0) {
-    <div>
-        <p><strong>Genres:</strong> {{ genres.join(', ') }}</p>
+            <div class="genres-cast">
+                @if (genres.length > 0) {
+                <div>
+                    <p><strong>Genres:</strong> {{ genres.join(', ') }}</p>
+                </div>
+                }
+                @if (cast.length > 0) {
+                <div>
+                    <p><strong>Cast:</strong> {{ castList }}, more...</p>
+                </div>
+                }
+
+            </div>
+        </div>
+
+        <div class="similar-movies">
+            <h3>Similar Movies</h3>
+            <div class="similar-movie-list">
+                @for (similarMovie of similarMovies; track $index) {
+
+                <div class="similar-movie-item" (click)="selectMainMovie(similarMovie)">
+                    <img [src]="'https://image.tmdb.org/t/p/w200' + similarMovie.poster_path" [alt]="similarMovie.title"
+                        class="similar-movie-poster" />
+                    <div class="similar-description">
+                        <p class="truncate">{{ similarMovie.overview }}</p>
+                    </div>
+                </div>
+                }
+            </div>
+        </div>
     </div>
-    }
-    @if (cast.length > 0) {
-    <div>
-        <p><strong>Cast:</strong></p>
-        <ul>
-            @for (actor of cast; track $index) {
-            <li>{{ actor.name }} as {{ actor.character }}</li>
-            }
-        </ul>
-    </div>
-    }
 </div>

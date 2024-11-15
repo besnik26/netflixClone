@@ -5,6 +5,7 @@ import {
   ReactiveFormsModule,
   Validators
 } from "@angular/forms";
+import { NgClass } from '@angular/common';
 
 import { Router, RouterLink, ActivatedRoute, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
@@ -12,11 +13,12 @@ import { filter } from 'rxjs/operators';
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [ReactiveFormsModule, RouterLink],
+  imports: [ReactiveFormsModule, RouterLink, NgClass],
   templateUrl: './header.component.html',
   styleUrl: './header.component.css'
 })
 export class HeaderComponent implements OnInit {
+  menuOpen: boolean = false
   currentRoute?: string;
   @Input() section: string = '';
   myForm!: FormGroup;
@@ -41,11 +43,16 @@ export class HeaderComponent implements OnInit {
     if (this.myForm.valid) {
       const query = this.myForm.value.search;
       this.router.navigate(['/search'], { queryParams: { query } });
-
-
+      this.menuOpen = false;
     }
-    else {
+  }
 
-    }
+  logout() {
+    localStorage.removeItem('token');
+    this.router.navigate(['/home']);
+  }
+
+  toggleMenu() {
+    this.menuOpen = !this.menuOpen;
   }
 }

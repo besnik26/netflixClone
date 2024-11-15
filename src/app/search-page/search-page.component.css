@@ -28,3 +28,29 @@
     height: auto;
     border-radius: 5px;
 }
+
+.not-found {
+    width: 100%;
+    color: white;
+    margin: 350px 0;
+}
+
+@media only screen and (max-width: 768px) {
+    .main {
+        padding: 120px 16px 0 16px;
+        column-gap: 15px;
+        row-gap: 15px;
+        justify-content: center;
+    }
+
+    .movie-card {
+        max-width: 130px;
+        color: white;
+    }
+
+    .movie-card img {
+        width: 130px;
+        height: auto;
+        border-radius: 5px;
+    }
+}

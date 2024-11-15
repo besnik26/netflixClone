@@ -12,7 +12,7 @@
     <div #swiperContainer class="swiper mySwiper">
         <div class="swiper-wrapper">
             @for (movie of trendingMovies; track $index) {
-            <div class="swiper-slide">
+            <div class="swiper-slide" (click)="onMovieClick(movie)">
                 <div>
                     <img [src]="'https://image.tmdb.org/t/p/w200/' + movie.poster_path"
                         alt="{{ movie.title || movie.name }}">
@@ -25,25 +25,8 @@
 </div>
 
 
+@if(selectedMovie){
+<app-movie-modal [movie]="selectedMovie" [genres]="genres" [cast]="cast" (close)="closeModal()">
 
-
-
-
-<!-- 
-
-
-@if(trendingMovies.length > 0){
-<div>
-    <h1>Trending Movies ({{period}})</h1>
-    @for (movie of trendingMovies; track $index) {
-    <div>
-        <p>{{movie.title || movie.name}}</p>
-        <img [src]="'https://image.tmdb.org/t/p/w200/' + movie.poster_path" alt="{{ movie.title || movie.name }}">
-    </div>
-    }
-</div>
+</app-movie-modal>
 }
-
-@if (trendingMovies.length===0) {
-<p>Loading trending data...</p>
-} -->

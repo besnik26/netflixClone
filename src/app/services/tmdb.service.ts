@@ -46,4 +46,9 @@ export class TmdbService {
     const url = `${this.apiUrl}/movie/${movieId}/credits?api_key=${this.apiKey}&language=en-US`;
     return this.http.get<any>(url);
   }
+
+  getMoviesByGenre(genreId: number): Observable<any> {
+    const url = `${this.apiUrl}/discover/movie?api_key=${this.apiKey}&with_genres=${genreId}&language=en-US`;
+    return this.http.get<any>(url);
+  }
 }

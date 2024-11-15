@@ -18,10 +18,11 @@ p {
 .swiper-slide {
     text-align: center;
     font-size: 18px;
-    background: #fff;
+    background: transparent;
     display: flex;
     justify-content: center;
     align-items: center;
+    cursor: pointer;
 }
 
 .swiper-slide img {
@@ -29,4 +30,10 @@ p {
     width: 100%;
     height: 100%;
     object-fit: contain;
+}
+
+@media only screen and (max-width: 768px) {
+    .main {
+        padding: 0px;
+    }
 }

@@ -3,13 +3,16 @@
         <form [formGroup]="myForm">
 
             <div class="login-form">
-                <h1>Sign In</h1>
+                <h1>Log In</h1>
                 <mat-form-field>
-                    <mat-label>Email or mobile number</mat-label>
+                    <mat-label>Email</mat-label>
                     <input matInput formControlName="email">
                 </mat-form-field>
-                @if(myForm.get('email')?.touched && myForm.get('email')?.invalid){
+                @if(myForm.get('email')?.touched && myForm.get('email')?.value === ''){
                 <span class="error">Please enter a valid email</span>
+                }
+                @if(myForm.get('email')?.hasError('invalidCredentials')){
+                <span class="error">Incorrect email or password</span>
                 }
 
                 <mat-form-field>
@@ -20,8 +23,11 @@
                         <mat-icon>{{hide() ? 'visibility_off' : 'visibility'}}</mat-icon>
                     </button>
                 </mat-form-field>
-                @if(myForm.get('password')?.touched && myForm.get('password')?.invalid){
-                <span class="error">Incorrect password</span>
+                @if(myForm.get('password')?.touched && myForm.get('password')?.value === ''){
+                <span class="error">Please enter password</span>
+                }
+                @if(myForm.get('password')?.hasError('invalidCredentials')){
+                <span class="error">Incorrect email or password</span>
                 }
 
                 <button type="button" class="sign-in" (click)="onSubmit()">Sign In</button>

@@ -4,7 +4,7 @@
     <div #swiperContainer class="swiper mySwiper">
         <div class="swiper-wrapper">
             @for (movie of topRatedMovies; track $index) {
-            <div class="swiper-slide">
+            <div class="swiper-slide" (click)="onMovieClick(movie)">
                 <div>
 
                     <img [src]="'https://image.tmdb.org/t/p/w200/' + movie.poster_path"
@@ -16,3 +16,9 @@
     </div>
     }
 </div>
+
+@if(selectedMovie){
+<app-movie-modal [movie]="selectedMovie" [genres]="genres" [cast]="cast" (close)="closeModal()">
+
+</app-movie-modal>
+}

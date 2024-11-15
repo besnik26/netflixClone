@@ -8,9 +8,9 @@
     max-width: 450px;
     width: 100%;
     background-color: rgba(0, 0, 0, 0.7);
-    height: 500px;
     min-height: 607px;
     padding: 48px 68px;
+    border-radius: 4px;
 }
 
 .login-form {
@@ -62,6 +62,10 @@ input.example-right-align {
 .mat-mdc-form-field {
     margin-top: 20px;
     border-radius: 4px !important;
+}
+
+::ng-deep .mat-icon {
+    color: white;
 }
 
 ::ng-deep .mdc-text-field--filled:not(.mdc-text-field--disabled) {
@@ -161,4 +165,12 @@ input.example-right-align {
     color: blue;
     text-decoration: underline;
     cursor: pointer;
+}
+
+@media only screen and (max-width: 768px) {
+    .login-container {
+        margin: 0 16px;
+        padding: 45px 35px;
+        min-height: auto;
+    }
 }

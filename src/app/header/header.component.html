@@ -6,27 +6,30 @@
 }
 
 @if(currentRoute !=='home'){
-<div class="main-2">
-    <div class="left-div">
+<div class="cover-div">
+
+    <div class="main-2">
         <img src="../../assets/logo.png" alt="logo" class="logo-browse">
-        <ul>
-            <li class="active" [routerLink]="'/browse'">Home</li>
-            <li>TV Shows</li>
-            <li>Movies</li>
-            <li>Latest</li>
-            <li>My List</li>
-            <li>Browse by Languages</li>
-        </ul>
-    </div>
-    <div class="right-div">
-        <form [formGroup]="myForm">
-            <div class="search-div">
-                <input type="text" placeholder="Search for movies" formControlName="search" (keyup.enter)="onSubmit()">
-                <img src="../../assets/icons/search-icon.svg" alt="">
+        <div class="hamburger" (click)="toggleMenu()">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+        <div class="menu" [ngClass]="{ 'show-menu': menuOpen }">
+            <div class="left-div">
+                <p [routerLink]="'/browse'">Browse</p>
             </div>
-        </form>
-        <p>Children</p>
-        <p>profile pic</p>
+            <div class="right-div">
+                <form [formGroup]="myForm">
+                    <div class="search-div">
+                        <input type="text" placeholder="Search for movies" formControlName="search"
+                            (keyup.enter)="onSubmit()">
+                        <img src="../../assets/icons/search-icon.svg" (click)="onSubmit()" alt="">
+                    </div>
+                </form>
+                <button type="button" class="log-out-button" (click)="logout()">Log out</button>
+            </div>
+        </div>
     </div>
 </div>
 }
