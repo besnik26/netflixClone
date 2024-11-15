@@ -53,4 +53,10 @@
         height: auto;
         border-radius: 5px;
     }
+
+    .not-found {
+        margin: 350px 0 250px 0;
+        padding: 0 16px;
+        text-align: center;
+    }
 }

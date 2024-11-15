@@ -46,10 +46,15 @@ export class HeaderComponent implements OnInit {
       this.menuOpen = false;
     }
   }
+  goToBrowse() {
+    this.router.navigate(['/browse']);
+    this.menuOpen = false;
+  }
 
   logout() {
     localStorage.removeItem('token');
     this.router.navigate(['/home']);
+    this.menuOpen = false;
   }
 
   toggleMenu() {

@@ -17,7 +17,7 @@
         </div>
         <div class="menu" [ngClass]="{ 'show-menu': menuOpen }">
             <div class="left-div">
-                <p [routerLink]="'/browse'">Browse</p>
+                <p (click)="goToBrowse()">Browse</p>
             </div>
             <div class="right-div">
                 <form [formGroup]="myForm">
