@@ -32,8 +32,15 @@ export class TmdbService {
     return this.http.get<any>(url);
   }
 
-  searchMovies(query: string): Observable<any> {
-    const url = `${this.apiUrl}/search/movie?api_key=${this.apiKey}&query=${query}&language=en-US`;
+  // searchMovies(query: string, page: number): Observable<any> {
+  //   // const url = `${this.apiUrl}/search/movie?api_key=${this.apiKey}&query=${query}&language=en-US`;
+  //   // return this.http.get<any>(url);
+  //   const url = `${this.apiUrl}/search/movie?api_key=${this.apiKey}&query=${query}&language=en-US&page=${page}`;
+  //   return this.http.get<any>(url);
+  // }
+
+  searchMovies(query: string, page: number = 1): Observable<any> {
+    const url = `${this.apiUrl}/search/movie?api_key=${this.apiKey}&query=${query}&page=${page}&language=en-US`;
     return this.http.get<any>(url);
   }
 

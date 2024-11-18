@@ -3,7 +3,8 @@
         @if (searchResults.length > 0) {
         <h2>Search Results for "{{ query }}"</h2>
 
-        <div class="main">
+
+        <cdk-virtual-scroll-viewport itemSize="500" class="main" (scrolledIndexChange)="onScroll()">
             @for (movie of searchResults; track $index) {
             @if (movie.poster_path) {
             <div class="movie-card" (click)="onMovieSelect(movie)">
@@ -11,7 +12,8 @@
             </div>
             }
             }
-        </div>
+        </cdk-virtual-scroll-viewport>
+
         }@else {
         <div class="not-found">
             <h2>Couldn't find Results for "{{query}}"</h2>

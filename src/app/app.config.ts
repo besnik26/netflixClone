@@ -5,6 +5,9 @@ import { provideAnimations } from '@angular/platform-browser/animations';
 
 import { routes } from './app.routes';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
+import { importProvidersFrom } from '@angular/core';
+import { ScrollingModule } from '@angular/cdk/scrolling';
+
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -12,6 +15,6 @@ export const appConfig: ApplicationConfig = {
     provideAnimationsAsync(),
     provideAnimations(),
     provideHttpClient(withFetch()),
-
+    importProvidersFrom(ScrollingModule)
   ]
 };
