@@ -1,0 +1,32 @@
+{
+    "demo": {
+        "title": "German"
+    },
+    "footer": {
+        "audio": "Audiobeschreibung",
+        "investor_relations": "Investor Relations",
+        "legal": "Rechtliche Hinweise",
+        "help": "Hilfecenter",
+        "jobs": "Jobs",
+        "cookie": "Cookie-Einstellungen",
+        "gift_cards": "Geschenkkarten",
+        "terms": "Nutzungsbedingungen",
+        "corporate": "Unternehmensinformationen",
+        "media": "Mediencenter",
+        "privacy": "Datenschutz",
+        "contact": "Kontakt"
+    },
+    "header": {
+        "browse": "Durchsuchen",
+        "search_placeholder": "Nach Filmen suchen",
+        "log_out": "Abmelden"
+    },
+    "browse": {
+        "trending": "Trendfilme",
+        "top_rated": "Bestbewertete Filme",
+        "upcoming": "Bevorstehende Filme"
+    },
+    "search": {
+        "not_found": "Keine Ergebnisse für gefunden"
+    }
+}

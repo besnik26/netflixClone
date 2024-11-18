@@ -8,7 +8,7 @@
     }
 
     @if(trendingMovies.length > 0){
-    <p>Trending Movies</p>
+    <p>{{'browse.trending' | translate}}</p>
     <div #swiperContainer class="swiper mySwiper">
         <div class="swiper-wrapper">
             @for (movie of trendingMovies; track $index) {

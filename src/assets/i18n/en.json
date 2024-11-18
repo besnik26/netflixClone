@@ -1,0 +1,32 @@
+{
+    "demo": {
+        "title": "English"
+    },
+    "footer": {
+        "audio": "Audio Description",
+        "investor_relations": "Investor Relations",
+        "legal": "Legal Notes",
+        "help": "Help Centre",
+        "jobs": "Jobs",
+        "cookie": "Cookie Preferences",
+        "gift_cards": "Gift Cards",
+        "terms": "Terms of Use",
+        "corporate": "Corporate Information",
+        "media": "Media Centre",
+        "privacy": "Privacy",
+        "contact": "Contact Us"
+    },
+    "header": {
+        "browse": "Browse",
+        "search_placeholder": "Search for movies",
+        "log_out": "Log out"
+    },
+    "browse": {
+        "trending": "Trending Movies",
+        "top_rated": "Top Rated Movies",
+        "upcoming": "Upcoming Movies"
+    },
+    "search": {
+        "not_found": "Couldn't find Results for"
+    }
+}

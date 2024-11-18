@@ -17,17 +17,23 @@
         </div>
         <div class="menu" [ngClass]="{ 'show-menu': menuOpen }">
             <div class="left-div">
-                <p (click)="goToBrowse()">Browse</p>
+                <p (click)="goToBrowse()">{{'header.browse' | translate}}</p>
             </div>
             <div class="right-div">
                 <form [formGroup]="myForm">
                     <div class="search-div">
-                        <input type="text" placeholder="Search for movies" formControlName="search"
-                            (keyup.enter)="onSubmit()">
+                        <input type="text" [placeholder]="'header.search_placeholder' | translate"
+                            formControlName="search" (keyup.enter)="onSubmit()">
                         <img src="../../assets/icons/search-icon.svg" (click)="onSubmit()" alt="">
                     </div>
                 </form>
-                <button type="button" class="log-out-button" (click)="logout()">Log out</button>
+                <button type="button" class="log-out-button" (click)="logout()">{{'header.log_out' |
+                    translate}}</button>
+                <select id="language-select" [(ngModel)]="selectedLanguage" (change)="changeLanguage(selectedLanguage)">
+                    @for (lang of languages; track $index) {
+                    <option [value]="lang">{{ lang}}</option>
+                    }
+                </select>
             </div>
         </div>
     </div>

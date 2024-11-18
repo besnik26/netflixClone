@@ -3,11 +3,12 @@ import { ActivatedRoute } from '@angular/router';
 import { TmdbService } from '../services/tmdb.service';
 import { MovieModalComponent } from "../movie-modal/movie-modal.component";
 import { CdkScrollable, ScrollingModule } from '@angular/cdk/scrolling';
-
+import { TranslatePipe } from '@ngx-translate/core';
+import { TranslateService } from '@ngx-translate/core';
 @Component({
   selector: 'app-search-page',
   standalone: true,
-  imports: [MovieModalComponent, ScrollingModule],
+  imports: [MovieModalComponent, ScrollingModule, TranslatePipe],
   templateUrl: './search-page.component.html',
   styleUrl: './search-page.component.css'
 })
@@ -24,7 +25,7 @@ export class SearchPageComponent implements OnInit {
   currentPage: number = 1;
   isFetching: boolean = false;
 
-  constructor(private route: ActivatedRoute, private tmdbService: TmdbService) { }
+  constructor(private route: ActivatedRoute, private translateService: TranslateService, private tmdbService: TmdbService) { }
 
   ngOnInit() {
     this.route.queryParams.subscribe(params => {
@@ -48,6 +49,7 @@ export class SearchPageComponent implements OnInit {
   }
 
   fetchAdditionalDetails(movieId: number) {
+    const currentLanguage = this.translateService.currentLang || 'en';
     this.tmdbService.getMovieDetails(movieId).subscribe(details => {
       this.genres = details.genres.map((g: any) => g.name);
     });

@@ -3,11 +3,12 @@ import Swiper from 'swiper';
 import { TmdbService } from '../services/tmdb.service';
 import { MovieModalComponent } from '../movie-modal/movie-modal.component';
 import { ChangeDetectorRef } from '@angular/core';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-top-rated-movies',
   standalone: true,
-  imports: [MovieModalComponent],
+  imports: [MovieModalComponent, TranslatePipe],
   templateUrl: './top-rated-movies.component.html',
   styleUrl: './top-rated-movies.component.css'
 })

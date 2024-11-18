@@ -3,17 +3,20 @@ import {
   FormBuilder,
   FormGroup,
   ReactiveFormsModule,
-  Validators
+  Validators,
+  FormsModule
 } from "@angular/forms";
 import { NgClass } from '@angular/common';
 
 import { Router, RouterLink, ActivatedRoute, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
+import { TranslateService, TranslatePipe } from '@ngx-translate/core';
+
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [ReactiveFormsModule, RouterLink, NgClass],
+  imports: [ReactiveFormsModule, RouterLink, NgClass, FormsModule, TranslatePipe],
   templateUrl: './header.component.html',
   styleUrl: './header.component.css'
 })
@@ -23,7 +26,16 @@ export class HeaderComponent implements OnInit {
   @Input() section: string = '';
   myForm!: FormGroup;
 
-  constructor(private formBuilder: FormBuilder, private router: Router, private activatedRoute: ActivatedRoute) {
+
+  languages = ['en', 'de'];
+  selectedLanguage = 'en';
+
+  constructor(
+    private formBuilder: FormBuilder,
+    private router: Router,
+    private activatedRoute: ActivatedRoute,
+    private translate: TranslateService
+  ) {
     this.myForm = this.formBuilder.group({
       search: ['', Validators.required,]
     })
@@ -33,6 +45,9 @@ export class HeaderComponent implements OnInit {
     ).subscribe(() => {
       this.currentRoute = this.router.url.split('/')[1];
     });
+
+    this.translate.setDefaultLang(this.selectedLanguage);
+
   }
 
   ngOnInit() {
@@ -46,6 +61,12 @@ export class HeaderComponent implements OnInit {
       this.menuOpen = false;
     }
   }
+
+  changeLanguage(lang: string) {
+    this.selectedLanguage = lang;
+    this.translate.use(lang);
+  }
+
   goToBrowse() {
     this.router.navigate(['/browse']);
     this.menuOpen = false;

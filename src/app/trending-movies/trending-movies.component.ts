@@ -4,12 +4,13 @@ import Swiper from 'swiper';
 import { SafeurlPipe } from '../pipes/safeurl.pipe';
 import { MovieModalComponent } from '../movie-modal/movie-modal.component';
 import { ChangeDetectorRef } from '@angular/core';
+import { TranslatePipe } from '@ngx-translate/core';
 
 
 @Component({
   selector: 'app-trending-movies',
   standalone: true,
-  imports: [SafeurlPipe, MovieModalComponent],
+  imports: [SafeurlPipe, MovieModalComponent, TranslatePipe],
   templateUrl: './trending-movies.component.html',
   styleUrl: './trending-movies.component.css'
 })

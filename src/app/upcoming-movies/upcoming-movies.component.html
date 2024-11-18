@@ -1,6 +1,6 @@
 <div class="main">
     @if(upcomingMovies.length > 0){
-    <p>Upcoming Movies </p>
+    <p>{{'browse.upcoming' | translate}}</p>
     <div #swiperContainer class="swiper mySwiper">
         <div class="swiper-wrapper">
             @for (movie of upcomingMovies; track $index) {

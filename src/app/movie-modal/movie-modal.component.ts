@@ -2,6 +2,7 @@ import { Component, OnInit, Input, Output, ViewChild, ElementRef, EventEmitter, 
 import { SafeurlPipe } from '../pipes/safeurl.pipe';
 import { TmdbService } from '../services/tmdb.service';
 import { ChangeDetectorRef } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-movie-modal',
@@ -20,7 +21,7 @@ export class MovieModalComponent implements OnInit {
   @ViewChild('modal') modalElement!: ElementRef;
 
 
-  constructor(private tmdbService: TmdbService, private cdr: ChangeDetectorRef) { }
+  constructor(private tmdbService: TmdbService, private translateService: TranslateService, private cdr: ChangeDetectorRef) { }
 
   ngOnInit() {
     setTimeout(() => {
@@ -30,6 +31,8 @@ export class MovieModalComponent implements OnInit {
 
 
   fetchSimilarMovies() {
+    const currentLanguage = this.translateService.currentLang || 'en';
+
     if (this.genres && this.genres.length > 0) {
       const mainGenreId = this.movie.genre_ids[0];
       this.tmdbService.getMoviesByGenre(mainGenreId).subscribe(response => {
@@ -60,6 +63,7 @@ export class MovieModalComponent implements OnInit {
   }
 
   selectMainMovie(newMovie: any) {
+    const currentLanguage = this.translateService.currentLang || 'en';
     this.movie = newMovie;
     this.cast = [];
     this.genres = [];
