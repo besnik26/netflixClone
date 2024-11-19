@@ -7,7 +7,7 @@ import {
   FormsModule
 } from "@angular/forms";
 import { NgClass } from '@angular/common';
-
+import { ElementRef } from '@angular/core';
 import { Router, RouterLink, ActivatedRoute, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { TranslateService, TranslatePipe } from '@ngx-translate/core';
@@ -35,7 +35,8 @@ export class HeaderComponent implements OnInit {
     private formBuilder: FormBuilder,
     private router: Router,
     private activatedRoute: ActivatedRoute,
-    private translate: TranslateService
+    private translate: TranslateService,
+    private elementRef: ElementRef,
   ) {
     this.myForm = this.formBuilder.group({
       search: ['', Validators.required,]
@@ -69,12 +70,12 @@ export class HeaderComponent implements OnInit {
   closeDropdown() {
     this.isOpen = false;
   }
-
   @HostListener('document:click', ['$event'])
-  onDocumentClick(event: Event): void {
-    const targetElement = event.target as HTMLElement;
-
-    if (targetElement && !targetElement.closest('.main-2') && this.menuOpen) {
+  ClickOut(event: MouseEvent) {
+    const isClickedOutside = !this.elementRef.nativeElement.contains(
+      event.target as Node
+    );
+    if (isClickedOutside) {
       this.menuOpen = false;
       this.isOpen = false;
     }
