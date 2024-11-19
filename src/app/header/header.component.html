@@ -27,13 +27,24 @@
                         <img src="../../assets/icons/search-icon.svg" (click)="onSubmit()" alt="">
                     </div>
                 </form>
+                <div class="custom-dropdown" [ngClass]="{ 'open': isOpen }" (clickOutside)="closeDropdown()">
+                    <div class="selected-option" (click)="toggleDropdown()">
+                        {{ selectedLanguage || 'Select Language' }}
+                        <span class="arrow" [ngClass]="{ 'up': isOpen }"></span>
+                    </div>
+                    @if (isOpen) {
+                    <ul class="dropdown-options">
+                        @for (lang of languages; track $index) {
+                        <li (click)="selectLanguage(lang)">
+                            {{ lang }}
+                        </li>
+                        }
+                    </ul>
+                    }
+                </div>
                 <button type="button" class="log-out-button" (click)="logout()">{{'header.log_out' |
                     translate}}</button>
-                <select id="language-select" [(ngModel)]="selectedLanguage" (change)="changeLanguage(selectedLanguage)">
-                    @for (lang of languages; track $index) {
-                    <option [value]="lang">{{ lang}}</option>
-                    }
-                </select>
+
             </div>
         </div>
     </div>

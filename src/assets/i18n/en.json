@@ -28,5 +28,12 @@
     },
     "search": {
         "not_found": "Couldn't find Results for"
+    },
+    "modal": {
+        "release_date": "Release Date:",
+        "description": "Description:",
+        "genres": "Genres:",
+        "cast": "Cast:",
+        "similar_movies": "Similar Movies"
     }
 }

@@ -1,11 +1,11 @@
-import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { TmdbService } from '../services/tmdb.service';
 import Swiper from 'swiper';
 import { SafeurlPipe } from '../pipes/safeurl.pipe';
 import { MovieModalComponent } from '../movie-modal/movie-modal.component';
 import { ChangeDetectorRef } from '@angular/core';
-import { TranslatePipe } from '@ngx-translate/core';
-
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-trending-movies',
@@ -14,7 +14,7 @@ import { TranslatePipe } from '@ngx-translate/core';
   templateUrl: './trending-movies.component.html',
   styleUrl: './trending-movies.component.css'
 })
-export class TrendingMoviesComponent implements OnInit, AfterViewInit {
+export class TrendingMoviesComponent implements OnInit, OnDestroy {
   @ViewChild('swiperContainer') swiperContainer!: ElementRef;
   trendingMovies: any[] = [];
   mediaType: string = 'movie';
@@ -28,16 +28,27 @@ export class TrendingMoviesComponent implements OnInit, AfterViewInit {
   cast: any[] = [];
   showModal: boolean = false;
   selectedMovie: any = null;
+  private languageChangeSub: Subscription | null = null;
 
-  constructor(private tmdbService: TmdbService, private cdr: ChangeDetectorRef) { }
+  constructor(private tmdbService: TmdbService, private cdr: ChangeDetectorRef, private translateService: TranslateService) { }
 
   ngOnInit() {
     this.fetchTrendingMovies();
+    this.languageChangeSub = this.translateService.onLangChange.subscribe(() => {
+      // Clear existing movies and refetch
+      this.trendingMovies = [];
+      this.fetchTrendingMovies();
+    });
   }
 
-  ngAfterViewInit() {
-
+  ngOnDestroy() {
+    // Unsubscribe when the component is destroyed to prevent memory leaks
+    if (this.languageChangeSub) {
+      this.languageChangeSub.unsubscribe();
+    }
   }
+
+
 
   initSwiper() {
 

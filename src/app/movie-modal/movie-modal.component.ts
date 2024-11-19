@@ -2,16 +2,17 @@ import { Component, OnInit, Input, Output, ViewChild, ElementRef, EventEmitter, 
 import { SafeurlPipe } from '../pipes/safeurl.pipe';
 import { TmdbService } from '../services/tmdb.service';
 import { ChangeDetectorRef } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+
 
 @Component({
   selector: 'app-movie-modal',
   standalone: true,
-  imports: [SafeurlPipe],
+  imports: [SafeurlPipe, TranslatePipe],
   templateUrl: './movie-modal.component.html',
   styleUrl: './movie-modal.component.css'
 })
-export class MovieModalComponent implements OnInit {
+export class MovieModalComponent implements OnInit, OnChanges {
   @Input() movie: any;
   @Input() genres: string[] = [];
   @Input() cast: any[] = [];
@@ -29,6 +30,11 @@ export class MovieModalComponent implements OnInit {
     }, 200)
   }
 
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['movie'] && changes['movie'].currentValue) {
+      console.log('Movie details updated:', this.movie);
+    }
+  }
 
   fetchSimilarMovies() {
     const currentLanguage = this.translateService.currentLang || 'en';

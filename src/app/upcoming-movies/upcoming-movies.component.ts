@@ -3,7 +3,7 @@ import Swiper from 'swiper';
 import { TmdbService } from '../services/tmdb.service';
 import { MovieModalComponent } from '../movie-modal/movie-modal.component';
 import { ChangeDetectorRef } from '@angular/core';
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-upcoming-movies',
@@ -23,10 +23,15 @@ export class UpcomingMoviesComponent implements OnInit, AfterViewInit {
   showModal: boolean = false;
   selectedMovie: any = null;
 
-  constructor(private tmdbService: TmdbService, private cdr: ChangeDetectorRef) { }
+  constructor(private tmdbService: TmdbService, private cdr: ChangeDetectorRef, private translate: TranslateService) { }
 
   ngOnInit() {
     this.fetchUpcomingMovies();
+    this.translate.onLangChange.subscribe(() => {
+      this.upcomingMovies = [];
+      this.fetchUpcomingMovies();
+    });
+
   }
 
   ngAfterViewInit() {

@@ -21,19 +21,19 @@
         <h2>{{ movie.title }}</h2>
         <div class="details-div">
             <div class="details">
-                <p><strong>Release Date:</strong> {{ movie.release_date }}</p>
-                <p><strong>Description:</strong> {{ movie.overview }}</p>
+                <p><strong>{{'modal.release_date' | translate}}</strong> {{ movie.release_date }}</p>
+                <p><strong>{{'modal.description' | translate}}</strong> {{ movie.overview }}</p>
             </div>
 
             <div class="genres-cast">
                 @if (genres.length > 0) {
                 <div>
-                    <p><strong>Genres:</strong> {{ genres.join(', ') }}</p>
+                    <p><strong>{{'modal.genres' | translate}}</strong> {{ genres.join(', ') }}</p>
                 </div>
                 }
                 @if (cast.length > 0) {
                 <div>
-                    <p><strong>Cast:</strong> {{ castList }}, more...</p>
+                    <p><strong>{{'modal.cast' | translate}}</strong> {{ castList }} ...</p>
                 </div>
                 }
 
@@ -41,7 +41,7 @@
         </div>
 
         <div class="similar-movies">
-            <h3>Similar Movies</h3>
+            <h3>{{'modal.similar_movies' | translate}}</h3>
             <div class="similar-movie-list">
                 @for (similarMovie of similarMovies; track $index) {
 

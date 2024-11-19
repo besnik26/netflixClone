@@ -17,49 +17,8 @@ export class TmdbService {
   ) { }
 
   private getLanguage(): string {
-    // Use the current language from ngx-translate
-    return this.translate.currentLang || 'en-US'; // Default to 'en-US' if no language is set
+    return this.translate.currentLang || 'en-US';
   }
-
-  // getTrending(mediaType: string, period: string): Observable<any> {
-  //   const url = `${this.apiUrl}/trending/${mediaType}/${period}?api_key=${this.apiKey}&language=en-US`;
-  //   return this.http.get<any>(url);
-  // }
-
-  // getMovieVideos(movieId: number): Observable<any> {
-  //   const url = `${this.apiUrl}/movie/${movieId}/videos?api_key=${this.apiKey}&language=en-US`;
-  //   return this.http.get<any>(url);
-  // }
-
-  // getTopRatedMovies(): Observable<any> {
-  //   const url = `${this.apiUrl}/movie/top_rated?api_key=${this.apiKey}&language=en-US`;
-  //   return this.http.get<any>(url);
-  // }
-
-  // getUpcomingMovies(): Observable<any> {
-  //   const url = `${this.apiUrl}/movie/upcoming?api_key=${this.apiKey}&language=en-US`;
-  //   return this.http.get<any>(url);
-  // }
-
-  // searchMovies(query: string, page: number = 1): Observable<any> {
-  //   const url = `${this.apiUrl}/search/movie?api_key=${this.apiKey}&query=${query}&page=${page}&language=en-US`;
-  //   return this.http.get<any>(url);
-  // }
-
-  // getMovieDetails(movieId: number): Observable<any> {
-  //   const url = `${this.apiUrl}/movie/${movieId}?api_key=${this.apiKey}&language=en-US`;
-  //   return this.http.get<any>(url);
-  // }
-
-  // getMovieCredits(movieId: number): Observable<any> {
-  //   const url = `${this.apiUrl}/movie/${movieId}/credits?api_key=${this.apiKey}&language=en-US`;
-  //   return this.http.get<any>(url);
-  // }
-
-  // getMoviesByGenre(genreId: number): Observable<any> {
-  //   const url = `${this.apiUrl}/discover/movie?api_key=${this.apiKey}&with_genres=${genreId}&language=en-US`;
-  //   return this.http.get<any>(url);
-  // }
 
   getTrending(mediaType: string, period: string): Observable<any> {
     const url = `${this.apiUrl}/trending/${mediaType}/${period}?api_key=${this.apiKey}&language=${this.getLanguage()}`;

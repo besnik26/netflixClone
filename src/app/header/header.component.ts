@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, HostListener } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -26,6 +26,7 @@ export class HeaderComponent implements OnInit {
   @Input() section: string = '';
   myForm!: FormGroup;
 
+  isOpen = false;
 
   languages = ['en', 'de'];
   selectedLanguage = 'en';
@@ -61,10 +62,29 @@ export class HeaderComponent implements OnInit {
       this.menuOpen = false;
     }
   }
+  toggleDropdown() {
+    this.isOpen = !this.isOpen;
+  }
 
-  changeLanguage(lang: string) {
+  closeDropdown() {
+    this.isOpen = false;
+  }
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: Event): void {
+    const targetElement = event.target as HTMLElement;
+
+    if (targetElement && !targetElement.closest('.main-2') && this.menuOpen) {
+      this.menuOpen = false;
+      this.isOpen = false;
+    }
+  }
+
+  selectLanguage(lang: string) {
     this.selectedLanguage = lang;
     this.translate.use(lang);
+    this.closeDropdown();
+    this.menuOpen = false;
   }
 
   goToBrowse() {
@@ -80,5 +100,6 @@ export class HeaderComponent implements OnInit {
 
   toggleMenu() {
     this.menuOpen = !this.menuOpen;
+    this.isOpen = false
   }
 }
