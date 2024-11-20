@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { HeaderComponent } from "../header/header.component";
+import { HeaderComponent } from '../shared/header/header.component';
 import { TmdbService } from '../services/tmdb.service';
 import { TrendingMoviesComponent } from "../trending-movies/trending-movies.component";
 import { TopRatedMoviesComponent } from "../top-rated-movies/top-rated-movies.component";

@@ -1,8 +1,8 @@
-import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { TmdbService } from '../services/tmdb.service';
 import Swiper from 'swiper';
 import { SafeurlPipe } from '../pipes/safeurl.pipe';
-import { MovieModalComponent } from '../movie-modal/movie-modal.component';
+import { MovieModalComponent } from '../shared/movie-modal/movie-modal.component';
 import { ChangeDetectorRef } from '@angular/core';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';

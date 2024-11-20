@@ -5,7 +5,7 @@
         <cdk-virtual-scroll-viewport itemSize="500" class="main" (scrolledIndexChange)="onScroll()">
             @for (movie of searchResults; track $index) {
             @if (movie.poster_path) {
-            <div class="movie-card" (click)="onMovieSelect(movie)">
+            <div class="movie-card" (click)="onMovieSelect(movie)" (keydown.enter)="onMovieSelect(movie)" tabindex="0">
                 <img [src]="'https://image.tmdb.org/t/p/w200' + movie.poster_path" alt="{{ movie.title }} poster" />
             </div>
             }

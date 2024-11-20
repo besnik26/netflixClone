@@ -1,7 +1,7 @@
-import { AfterViewInit, Component, ElementRef, ViewChild, OnInit } from '@angular/core';
+import { Component, ElementRef, ViewChild, OnInit } from '@angular/core';
 import Swiper from 'swiper';
 import { TmdbService } from '../services/tmdb.service';
-import { MovieModalComponent } from '../movie-modal/movie-modal.component';
+import { MovieModalComponent } from '../shared/movie-modal/movie-modal.component';
 import { ChangeDetectorRef } from '@angular/core';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
@@ -12,7 +12,7 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
   templateUrl: './top-rated-movies.component.html',
   styleUrl: './top-rated-movies.component.css'
 })
-export class TopRatedMoviesComponent implements OnInit, AfterViewInit {
+export class TopRatedMoviesComponent implements OnInit {
 
   @ViewChild('swiperContainer') swiperContainer!: ElementRef;
   topRatedMovies: any[] = [];
@@ -36,9 +36,7 @@ export class TopRatedMoviesComponent implements OnInit, AfterViewInit {
     });
   }
 
-  ngAfterViewInit() {
 
-  }
 
   initSwiper() {
     if (this.swiper) {

@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, Output, ViewChild, ElementRef, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
-import { SafeurlPipe } from '../pipes/safeurl.pipe';
-import { TmdbService } from '../services/tmdb.service';
+import { SafeurlPipe } from '../../pipes/safeurl.pipe';
+import { TmdbService } from '../../services/tmdb.service';
 import { ChangeDetectorRef } from '@angular/core';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 

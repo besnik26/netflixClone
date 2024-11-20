@@ -1,7 +1,7 @@
-import { Component, ElementRef, ViewChild, OnInit, AfterViewInit } from '@angular/core';
+import { Component, ElementRef, ViewChild, OnInit } from '@angular/core';
 import Swiper from 'swiper';
 import { TmdbService } from '../services/tmdb.service';
-import { MovieModalComponent } from '../movie-modal/movie-modal.component';
+import { MovieModalComponent } from '../shared/movie-modal/movie-modal.component';
 import { ChangeDetectorRef } from '@angular/core';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
@@ -12,7 +12,7 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
   templateUrl: './upcoming-movies.component.html',
   styleUrl: './upcoming-movies.component.css'
 })
-export class UpcomingMoviesComponent implements OnInit, AfterViewInit {
+export class UpcomingMoviesComponent implements OnInit {
   upcomingMovies: any[] = [];
   @ViewChild('swiperContainer') swiperContainer!: ElementRef;
   swiper: Swiper | null = null;
@@ -34,9 +34,7 @@ export class UpcomingMoviesComponent implements OnInit, AfterViewInit {
 
   }
 
-  ngAfterViewInit() {
 
-  }
 
   initSwiper() {
     if (this.swiper) {

@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
-import { HeaderComponent } from "./header/header.component";
-import { FooterComponent } from "./footer/footer.component";
+import { HeaderComponent } from './shared/header/header.component';
+import { FooterComponent } from "./shared/footer/footer.component";
 import { TranslateModule } from '@ngx-translate/core';
 import { TranslateService } from "@ngx-translate/core";
 

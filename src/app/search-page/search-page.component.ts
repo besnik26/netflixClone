@@ -1,11 +1,14 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { TmdbService } from '../services/tmdb.service';
-import { MovieModalComponent } from "../movie-modal/movie-modal.component";
-import { CdkScrollable, ScrollingModule } from '@angular/cdk/scrolling';
+import { MovieModalComponent } from '../shared/movie-modal/movie-modal.component';
+import { ScrollingModule } from '@angular/cdk/scrolling';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-
 import { Subscription } from 'rxjs';
+import { Movie, MovieDetails, MovieVideo } from '../interfaces/movie';
+import { CastMember, Credits } from '../interfaces/credits';
+import { ApiResponse } from '../interfaces/api-response';
+import { Genre } from '../interfaces/genre';
 
 @Component({
   selector: 'app-search-page',
@@ -15,13 +18,13 @@ import { Subscription } from 'rxjs';
   styleUrl: './search-page.component.css'
 })
 export class SearchPageComponent implements OnInit, OnDestroy {
-  searchResults: any[] = [];
+  searchResults: Movie[] = [];
   query: string = '';
 
   //Modal properties
-  selectedMovie: any = null;
+  selectedMovie: Movie | null = null;
   genres: string[] = [];
-  cast: any[] = [];
+  cast: CastMember[] = [];
 
   //Pagination properties
   currentPage: number = 1;
@@ -58,7 +61,7 @@ export class SearchPageComponent implements OnInit, OnDestroy {
     this.currentPage = 1;
   }
 
-  onMovieSelect(movie: any) {
+  onMovieSelect(movie: Movie) {
     this.selectedMovie = movie;
     console.log('Movie selected:', this.selectedMovie);
     this.fetchAdditionalDetails(movie.id);
@@ -66,11 +69,11 @@ export class SearchPageComponent implements OnInit, OnDestroy {
   }
 
   fetchAdditionalDetails(movieId: number) {
-    this.tmdbService.getMovieDetails(movieId).subscribe(details => {
-      this.genres = details.genres.map((g: any) => g.name);
+    this.tmdbService.getMovieDetails(movieId).subscribe((details: MovieDetails) => {
+      this.genres = details.genres.map((g: Genre) => g.name);
     });
 
-    this.tmdbService.getMovieCredits(movieId).subscribe(credits => {
+    this.tmdbService.getMovieCredits(movieId).subscribe((credits: Credits) => {
       this.cast = credits.cast.slice(0, 5);
     });
   }
@@ -89,27 +92,30 @@ export class SearchPageComponent implements OnInit, OnDestroy {
 
   refetchSelectedMovie(movieId: number) {
     console.log('Refetching movie details for ID:', movieId);
-    this.tmdbService.getMovieDetails(movieId).subscribe(movieDetails => {
+    this.tmdbService.getMovieDetails(movieId).subscribe((movieDetails: MovieDetails) => {
       this.selectedMovie = {
         ...this.selectedMovie,
         ...movieDetails
       };
       console.log('Updated selectedMovie:', this.selectedMovie);
-      this.genres = movieDetails.genres.map((g: any) => g.name);
+      this.genres = movieDetails.genres.map((g: Genre) => g.name);
     });
 
-    this.tmdbService.getMovieCredits(movieId).subscribe(credits => {
+    this.tmdbService.getMovieCredits(movieId).subscribe((credits: Credits) => {
       this.cast = credits.cast.slice(0, 5);
     });
   }
 
   fetchTrailer(movieId: number) {
-    this.tmdbService.getMovieVideos(movieId).subscribe(videos => {
-      const trailer = videos.results.find((video: any) => video.type === 'Trailer' && video.site === 'YouTube');
-      if (trailer) {
-        this.selectedMovie.trailerUrl = `https://www.youtube.com/embed/${trailer.key}`;
-      } else {
-        this.selectedMovie.trailerUrl = null;
+    this.tmdbService.getMovieVideos(movieId).subscribe((videos: ApiResponse<MovieVideo>) => {
+      const trailer = videos.results.find((video: MovieVideo) => video.type === 'Trailer' && video.site === 'YouTube');
+
+      if (this.selectedMovie) {
+        if (trailer) {
+          this.selectedMovie.trailerUrl = `https://www.youtube.com/embed/${trailer.key}`;
+        } else {
+          this.selectedMovie.trailerUrl = null;
+        }
       }
     });
   }
