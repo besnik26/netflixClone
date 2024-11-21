@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Router, RouterLink, ActivatedRoute, NavigationEnd } from '@angular/router';
+import { Router, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { TranslateService, TranslatePipe } from "@ngx-translate/core";
 

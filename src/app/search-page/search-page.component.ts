@@ -4,11 +4,13 @@ import { TmdbService } from '../services/tmdb.service';
 import { MovieModalComponent } from '../shared/movie-modal/movie-modal.component';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { Subscription } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
+import { debounceTime, distinctUntilChanged, switchMap, catchError } from 'rxjs/operators';
 import { Movie, MovieDetails, MovieVideo } from '../interfaces/movie';
 import { CastMember, Credits } from '../interfaces/credits';
 import { ApiResponse } from '../interfaces/api-response';
 import { Genre } from '../interfaces/genre';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-search-page',
@@ -31,6 +33,9 @@ export class SearchPageComponent implements OnInit, OnDestroy {
   isFetching: boolean = false;
 
   private languageChangeSubscription!: Subscription;
+  private destroy$ = new Subject<void>();
+
+  searchQueryControl = new FormControl('');
 
   constructor(
     private route: ActivatedRoute,
@@ -39,7 +44,7 @@ export class SearchPageComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-    console.log('SearchPageComponent initialized');
+
     this.route.queryParams.subscribe(params => {
       this.query = params['query'] || '';
       if (this.query) {
@@ -48,7 +53,9 @@ export class SearchPageComponent implements OnInit, OnDestroy {
       }
     });
     this.subscribeToLanguageChanges();
+    this.setupSearchForm();
   }
+
   ngOnDestroy() {
     if (this.languageChangeSubscription) {
       this.languageChangeSubscription.unsubscribe();
@@ -63,7 +70,6 @@ export class SearchPageComponent implements OnInit, OnDestroy {
 
   onMovieSelect(movie: Movie) {
     this.selectedMovie = movie;
-    console.log('Movie selected:', this.selectedMovie);
     this.fetchAdditionalDetails(movie.id);
     this.fetchTrailer(movie.id);
   }
@@ -79,10 +85,7 @@ export class SearchPageComponent implements OnInit, OnDestroy {
   }
 
   private subscribeToLanguageChanges() {
-    console.log('Subscribing to language changes');
     this.languageChangeSubscription = this.translateService.onLangChange.subscribe(() => {
-      console.log('Language changed, refreshing content');
-
       this.resetSearch();
       this.fetchSearchResults(this.query, this.currentPage);
     });
@@ -91,13 +94,11 @@ export class SearchPageComponent implements OnInit, OnDestroy {
 
 
   refetchSelectedMovie(movieId: number) {
-    console.log('Refetching movie details for ID:', movieId);
     this.tmdbService.getMovieDetails(movieId).subscribe((movieDetails: MovieDetails) => {
       this.selectedMovie = {
         ...this.selectedMovie,
         ...movieDetails
       };
-      console.log('Updated selectedMovie:', this.selectedMovie);
       this.genres = movieDetails.genres.map((g: Genre) => g.name);
     });
 
@@ -121,7 +122,7 @@ export class SearchPageComponent implements OnInit, OnDestroy {
   }
 
   closeModal() {
-    console.log('Closing modal, resetting selectedMovie');
+
     this.selectedMovie = null;
   }
 
@@ -148,6 +149,24 @@ export class SearchPageComponent implements OnInit, OnDestroy {
   onScroll() {
     const nextPage = this.currentPage + 1;
     this.fetchSearchResults(this.query, nextPage);
+  }
+
+  private setupSearchForm() {
+    this.searchQueryControl.valueChanges.pipe(
+      debounceTime(300),
+      distinctUntilChanged(),
+      switchMap(query => {
+        const searchQuery = query || '';
+        this.resetSearch();
+        return this.tmdbService.searchMovies(searchQuery, 1);
+      }),
+      catchError(error => {
+        console.error('Error during search:', error);
+        return [];
+      })
+    ).subscribe(response => {
+      this.searchResults = response.results;
+    });
   }
 
 

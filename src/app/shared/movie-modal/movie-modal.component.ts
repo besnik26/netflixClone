@@ -1,8 +1,13 @@
-import { Component, OnInit, Input, Output, ViewChild, ElementRef, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, OnInit, Input, Output, ViewChild, ElementRef, EventEmitter, OnChanges, SimpleChanges, OnDestroy } from '@angular/core';
 import { SafeurlPipe } from '../../pipes/safeurl.pipe';
 import { TmdbService } from '../../services/tmdb.service';
 import { ChangeDetectorRef } from '@angular/core';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { Movie, MovieVideo } from '../../interfaces/movie';
+import { CastMember } from '../../interfaces/credits';
+import { Genre } from '../../interfaces/genre';
+import { Subject } from 'rxjs';
+import { takeUntil, } from 'rxjs';
 
 
 @Component({
@@ -12,17 +17,19 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
   templateUrl: './movie-modal.component.html',
   styleUrl: './movie-modal.component.css'
 })
-export class MovieModalComponent implements OnInit, OnChanges {
-  @Input() movie: any;
+export class MovieModalComponent implements OnInit, OnChanges, OnDestroy {
+  @Input() movie!: Movie;
   @Input() genres: string[] = [];
-  @Input() cast: any[] = [];
-  similarMovies: any[] = [];
-  @Output() close = new EventEmitter<void>();
+  @Input() cast: CastMember[] = [];
+  similarMovies: Movie[] = [];
+  @Output() closeModal = new EventEmitter<void>();
 
   @ViewChild('modal') modalElement!: ElementRef;
 
+  private destroy$ = new Subject<void>();
 
-  constructor(private tmdbService: TmdbService, private translateService: TranslateService, private cdr: ChangeDetectorRef) { }
+
+  constructor(private tmdbService: TmdbService, private elementRef: ElementRef, private translateService: TranslateService, private cdr: ChangeDetectorRef) { }
 
   ngOnInit() {
     setTimeout(() => {
@@ -36,47 +43,51 @@ export class MovieModalComponent implements OnInit, OnChanges {
     }
   }
 
-  fetchSimilarMovies() {
-    const currentLanguage = this.translateService.currentLang || 'en';
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
 
+  fetchSimilarMovies() {
     if (this.genres && this.genres.length > 0) {
       const mainGenreId = this.movie.genre_ids[0];
-      this.tmdbService.getMoviesByGenre(mainGenreId).subscribe(response => {
+      this.tmdbService.getMoviesByGenre(mainGenreId).pipe(
+        takeUntil(this.destroy$)
+      ).subscribe(response => {
         this.similarMovies = response.results.slice(0, 6);
         this.cdr.detectChanges();
-
-      },
-        (error) => {
-          console.error('Error fetching similar movies:', error);
-        }
-      );
+      }, error => {
+        console.error('Error fetching similar movies:', error);
+      });
     }
   }
 
+
   onClose() {
-    this.close.emit();
+    this.closeModal.emit();
   }
   get castList(): string {
-    return this.cast.map(actor => actor.name).join(', ');
+    return this.cast.map((actor: CastMember) => actor.name).join(', ');
   }
 
   fetchTrailer(movieId: number) {
-    this.tmdbService.getMovieVideos(movieId).subscribe(videos => {
-      const trailer = videos.results.find((video: any) => video.type === 'Trailer' && video.site === 'YouTube');
+    this.tmdbService.getMovieVideos(movieId).pipe(
+      takeUntil(this.destroy$)
+    ).subscribe(videos => {
+      const trailer = videos.results.find((video: MovieVideo) => video.type === 'Trailer' && video.site === 'YouTube');
       this.movie.trailerUrl = trailer ? `https://www.youtube.com/embed/${trailer.key}` : null;
       this.cdr.detectChanges();
     });
   }
 
-  selectMainMovie(newMovie: any) {
-    const currentLanguage = this.translateService.currentLang || 'en';
+  selectMainMovie(newMovie: Movie) {
     this.movie = newMovie;
     this.cast = [];
     this.genres = [];
 
     this.tmdbService.getMovieDetails(newMovie.id).subscribe(details => {
       this.movie = { ...this.movie, ...details };
-      this.genres = details.genres.map((genre: any) => genre.name);
+      this.genres = details.genres.map((genre: Genre) => genre.name);
       this.cdr.detectChanges();
     });
 

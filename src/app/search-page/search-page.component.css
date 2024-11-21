@@ -17,7 +17,6 @@
     flex-wrap: wrap;
     column-gap: 29px;
     row-gap: 29px;
-    /* padding: 120px 48px 0 48px; */
     height: 85vh;
     width: 100%;
     overflow: auto;
@@ -40,6 +39,7 @@
 .movie-card {
     max-width: 175px;
     color: white;
+    cursor: pointer;
 }
 
 .movie-card img {

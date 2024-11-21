@@ -8,7 +8,7 @@ import {
   Validators
 } from "@angular/forms";
 import { Router } from '@angular/router';
-import { HttpClient } from '@angular/common/http';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -21,7 +21,7 @@ export class LoginComponent {
   hide = signal(true);
   myForm!: FormGroup;
 
-  constructor(private formBuilder: FormBuilder, private router: Router, private http: HttpClient) {
+  constructor(private formBuilder: FormBuilder, private router: Router, private authService: AuthService) {
     this.buildForm();
   }
 
@@ -57,20 +57,18 @@ export class LoginComponent {
     if (this.myForm.valid) {
       const { email, password } = this.myForm.value;
 
-      this.http
-        .get<any[]>(`http://localhost:3000/users?email=${email}&password=${password}`)
-        .subscribe(users => {
-          if (users.length > 0) {
-            localStorage.setItem('token', 'dummy-token');
-            this.router.navigate(['/browse']);
-          } else {
-            this.myForm.get('email')?.setErrors({ invalidCredentials: true });
-            this.myForm.get('password')?.setErrors({ invalidCredentials: true });
-          }
-        });
+      this.authService.login(email, password).subscribe(users => {
+        if (users.length > 0) {
 
-    }
-    else {
+          this.authService.saveToken('dummy-token');
+          this.router.navigate(['/browse']);
+        } else {
+
+          this.myForm.get('email')?.setErrors({ invalidCredentials: true });
+          this.myForm.get('password')?.setErrors({ invalidCredentials: true });
+        }
+      });
+    } else {
       this.markFormGroupTouched(this.myForm);
     }
   }

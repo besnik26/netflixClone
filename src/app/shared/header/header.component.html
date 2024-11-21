@@ -10,32 +10,35 @@
 
     <div class="main-2">
         <img src="../../../assets/logo.png" alt="logo" class="logo-browse">
-        <div class="hamburger" (click)="toggleMenu()">
+        <div class="hamburger" (click)="toggleMenu()" (keydown.enter)="toggleMenu()" tabindex="0">
             <span></span>
             <span></span>
             <span></span>
         </div>
         <div class="menu" [ngClass]="{ 'show-menu': menuOpen }">
             <div class="left-div">
-                <p (click)="goToBrowse()">{{'header.browse' | translate}}</p>
+                <p (click)="goToBrowse()" (keydown.enter)="goToBrowse()" tabindex="1">{{'header.browse' | translate}}
+                </p>
             </div>
             <div class="right-div">
                 <form [formGroup]="myForm">
                     <div class="search-div">
                         <input type="text" [placeholder]="'header.search_placeholder' | translate"
                             formControlName="search" (keyup.enter)="onSubmit()">
-                        <img src="../../../assets/icons/search-icon.svg" (click)="onSubmit()" alt="">
+                        <img src="../../../assets/icons/search-icon.svg" (click)="onSubmit()"
+                            (keydown.enter)="onSubmit()" tabindex="2" alt="">
                     </div>
                 </form>
                 <div class="custom-dropdown" [ngClass]="{ 'open': isOpen }" (clickOutside)="closeDropdown()">
-                    <div class="selected-option" (click)="toggleDropdown()">
+                    <div class="selected-option" (click)="toggleDropdown()" (keydown.enter)="toggleDropdown()"
+                        tabindex="3">
                         {{ selectedLanguage || 'Select Language' }}
                         <span class="arrow" [ngClass]="{ 'up': isOpen }"></span>
                     </div>
                     @if (isOpen) {
                     <ul class="dropdown-options">
                         @for (lang of languages; track $index) {
-                        <li (click)="selectLanguage(lang)">
+                        <li (click)="selectLanguage(lang)" (keydown.enter)="selectLanguage(lang)" tabindex="4">
                             {{ lang }}
                         </li>
                         }

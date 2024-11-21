@@ -4,6 +4,7 @@ import { TmdbService } from '../services/tmdb.service';
 import { TrendingMoviesComponent } from "../trending-movies/trending-movies.component";
 import { TopRatedMoviesComponent } from "../top-rated-movies/top-rated-movies.component";
 import { UpcomingMoviesComponent } from "../upcoming-movies/upcoming-movies.component";
+import { Movie } from '../interfaces/movie';
 
 @Component({
   selector: 'app-browse',
@@ -13,7 +14,7 @@ import { UpcomingMoviesComponent } from "../upcoming-movies/upcoming-movies.comp
   styleUrl: './browse.component.css'
 })
 export class BrowseComponent implements OnInit {
-  trendingMovies: any[] = [];
+  trendingMovies: Movie[] = [];
   mediaType: string = 'movie';
   period: string = 'week';
 

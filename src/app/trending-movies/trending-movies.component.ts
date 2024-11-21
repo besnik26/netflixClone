@@ -6,6 +6,8 @@ import { MovieModalComponent } from '../shared/movie-modal/movie-modal.component
 import { ChangeDetectorRef } from '@angular/core';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
+import { Movie, MovieDetails, MovieVideo } from '../interfaces/movie';
+import { CastMember } from '../interfaces/credits';
 
 @Component({
   selector: 'app-trending-movies',
@@ -16,7 +18,7 @@ import { Subscription } from 'rxjs';
 })
 export class TrendingMoviesComponent implements OnInit, OnDestroy {
   @ViewChild('swiperContainer') swiperContainer!: ElementRef;
-  trendingMovies: any[] = [];
+  trendingMovies: Movie[] = [];
   mediaType: string = 'movie';
   period: string = 'week';
   swiper: Swiper | null = null;
@@ -25,9 +27,9 @@ export class TrendingMoviesComponent implements OnInit, OnDestroy {
 
   //Modal properties
   genres: string[] = [];
-  cast: any[] = [];
+  cast: CastMember[] = [];
   showModal: boolean = false;
-  selectedMovie: any = null;
+  selectedMovie: Movie | null = null;
   private languageChangeSub: Subscription | null = null;
 
   constructor(private tmdbService: TmdbService, private cdr: ChangeDetectorRef, private translateService: TranslateService) { }
@@ -35,16 +37,17 @@ export class TrendingMoviesComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.fetchTrendingMovies();
     this.languageChangeSub = this.translateService.onLangChange.subscribe(() => {
-      // Clear existing movies and refetch
       this.trendingMovies = [];
       this.fetchTrendingMovies();
     });
   }
 
   ngOnDestroy() {
-    // Unsubscribe when the component is destroyed to prevent memory leaks
     if (this.languageChangeSub) {
       this.languageChangeSub.unsubscribe();
+    }
+    if (this.swiper) {
+      this.swiper.destroy();
     }
   }
 
@@ -100,7 +103,7 @@ export class TrendingMoviesComponent implements OnInit, OnDestroy {
   loadMovieVideo(movieId: number) {
     this.tmdbService.getMovieVideos(movieId).subscribe(
       (data) => {
-        const video = data.results.find((vid: any) => vid.type === 'Trailer' && vid.site === 'YouTube');
+        const video = data.results.find((vid: MovieVideo) => vid.type === 'Trailer' && vid.site === 'YouTube');
         if (video) {
           this.selectedMovieVideo = `https://www.youtube.com/embed/${video.key}`;
         } else {
@@ -116,21 +119,21 @@ export class TrendingMoviesComponent implements OnInit, OnDestroy {
 
   fetchTrailer(movieId: number) {
     this.tmdbService.getMovieVideos(movieId).subscribe(videos => {
-      const trailer = videos.results.find((video: any) => video.type === 'Trailer' && video.site === 'YouTube');
-      if (trailer) {
+      const trailer = videos.results.find((video: MovieVideo) => video.type === 'Trailer' && video.site === 'YouTube');
+      if (trailer && this.selectedMovie) {
         this.selectedMovie.trailerUrl = `https://www.youtube.com/embed/${trailer.key}`;
-      } else {
+      } else if (this.selectedMovie) {
         this.selectedMovie.trailerUrl = null;
       }
     });
   }
 
-  onMovieClick(movie: any) {
+  onMovieClick(movie: Movie) {
     this.selectedMovie = movie;
     this.showModal = true;
     this.fetchTrailer(movie.id);
-    this.tmdbService.getMovieDetails(movie.id).subscribe((details) => {
-      this.genres = details.genres.map((genre: any) => genre.name);
+    this.tmdbService.getMovieDetails(movie.id).subscribe((details: MovieDetails) => {
+      this.genres = details.genres.map((genre: { name: string }) => genre.name);
     });
 
     this.tmdbService.getMovieCredits(movie.id).subscribe((credits) => {

@@ -1,9 +1,14 @@
-import { Component, ElementRef, ViewChild, OnInit } from '@angular/core';
+import { Component, ElementRef, ViewChild, OnInit, OnDestroy } from '@angular/core';
 import Swiper from 'swiper';
 import { TmdbService } from '../services/tmdb.service';
 import { MovieModalComponent } from '../shared/movie-modal/movie-modal.component';
 import { ChangeDetectorRef } from '@angular/core';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { Movie, MovieVideo } from '../interfaces/movie';
+import { CastMember } from '../interfaces/credits';
+import { Genre } from '../interfaces/genre';
+import { Subscription } from 'rxjs';
+
 
 @Component({
   selector: 'app-top-rated-movies',
@@ -12,31 +17,39 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
   templateUrl: './top-rated-movies.component.html',
   styleUrl: './top-rated-movies.component.css'
 })
-export class TopRatedMoviesComponent implements OnInit {
+export class TopRatedMoviesComponent implements OnInit, OnDestroy {
 
   @ViewChild('swiperContainer') swiperContainer!: ElementRef;
-  topRatedMovies: any[] = [];
+  topRatedMovies: Movie[] = [];
   swiper: Swiper | null = null;
 
 
   //Modal properties
   genres: string[] = [];
-  cast: any[] = [];
+  cast: CastMember[] = [];
   showModal: boolean = false;
-  selectedMovie: any = null;
+  selectedMovie: Movie | null = null;
+
+  private languageChangeSub: Subscription | null = null;
 
   constructor(private tmdbService: TmdbService, private cdr: ChangeDetectorRef, private translate: TranslateService) { }
 
   ngOnInit() {
     this.fetchTopRatedMovies()
-
-    this.translate.onLangChange.subscribe(() => {
+    this.languageChangeSub = this.translate.onLangChange.subscribe(() => {
       this.topRatedMovies = [];
       this.fetchTopRatedMovies();
     });
   }
 
-
+  ngOnDestroy() {
+    if (this.languageChangeSub) {
+      this.languageChangeSub.unsubscribe();
+    }
+    if (this.swiper) {
+      this.swiper.destroy();
+    }
+  }
 
   initSwiper() {
     if (this.swiper) {
@@ -86,21 +99,21 @@ export class TopRatedMoviesComponent implements OnInit {
 
   fetchTrailer(movieId: number) {
     this.tmdbService.getMovieVideos(movieId).subscribe(videos => {
-      const trailer = videos.results.find((video: any) => video.type === 'Trailer' && video.site === 'YouTube');
-      if (trailer) {
+      const trailer = videos.results.find((video: MovieVideo) => video.type === 'Trailer' && video.site === 'YouTube');
+      if (trailer && this.selectedMovie) {
         this.selectedMovie.trailerUrl = `https://www.youtube.com/embed/${trailer.key}`;
-      } else {
+      } else if (this.selectedMovie) {
         this.selectedMovie.trailerUrl = null;
       }
     });
   }
 
-  onMovieClick(movie: any) {
+  onMovieClick(movie: Movie) {
     this.selectedMovie = movie;
     this.showModal = true;
     this.fetchTrailer(movie.id);
     this.tmdbService.getMovieDetails(movie.id).subscribe((details) => {
-      this.genres = details.genres.map((genre: any) => genre.name);
+      this.genres = details.genres.map((genre: Genre) => genre.name);
     });
 
     this.tmdbService.getMovieCredits(movie.id).subscribe((credits) => {

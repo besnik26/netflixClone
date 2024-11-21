@@ -21,6 +21,6 @@
 </div>
 
 @if (selectedMovie) {
-<app-movie-modal [movie]="selectedMovie" [genres]="genres" [cast]="cast" (close)="closeModal()">
+<app-movie-modal [movie]="selectedMovie" [genres]="genres" [cast]="cast" (closeModal)="closeModal()">
 </app-movie-modal>
 }
