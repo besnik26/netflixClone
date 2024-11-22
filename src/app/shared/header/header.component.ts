@@ -60,6 +60,7 @@ export class HeaderComponent implements OnInit {
     if (this.myForm.valid) {
       const query = this.myForm.value.search;
       this.router.navigate(['/search'], { queryParams: { query } });
+      this.scrollToTop();
       this.menuOpen = false;
     }
   }
@@ -90,6 +91,7 @@ export class HeaderComponent implements OnInit {
 
   goToBrowse() {
     this.router.navigate(['/browse']);
+    this.scrollToTop();
     this.menuOpen = false;
   }
 
@@ -102,5 +104,11 @@ export class HeaderComponent implements OnInit {
   toggleMenu() {
     this.menuOpen = !this.menuOpen;
     this.isOpen = false
+  }
+  scrollToTop(): void {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
   }
 }

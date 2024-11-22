@@ -5,7 +5,8 @@ import { SafeurlPipe } from '../pipes/safeurl.pipe';
 import { MovieModalComponent } from '../shared/movie-modal/movie-modal.component';
 import { ChangeDetectorRef } from '@angular/core';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { Subscription } from 'rxjs';
+import { Subscription, Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { Movie, MovieDetails, MovieVideo } from '../interfaces/movie';
 import { CastMember } from '../interfaces/credits';
 
@@ -32,6 +33,8 @@ export class TrendingMoviesComponent implements OnInit, OnDestroy {
   selectedMovie: Movie | null = null;
   private languageChangeSub: Subscription | null = null;
 
+  private destroy$ = new Subject<void>();
+
   constructor(private tmdbService: TmdbService, private cdr: ChangeDetectorRef, private translateService: TranslateService) { }
 
   ngOnInit() {
@@ -43,6 +46,8 @@ export class TrendingMoviesComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
     if (this.languageChangeSub) {
       this.languageChangeSub.unsubscribe();
     }
@@ -85,7 +90,9 @@ export class TrendingMoviesComponent implements OnInit, OnDestroy {
   }
 
   fetchTrendingMovies() {
-    this.tmdbService.getTrending(this.mediaType, this.period).subscribe(
+    this.tmdbService.getTrending(this.mediaType, this.period).pipe(
+      takeUntil(this.destroy$)
+    ).subscribe(
       (data) => {
         this.trendingMovies = data.results;
         if (this.trendingMovies.length > 0) {
@@ -101,14 +108,12 @@ export class TrendingMoviesComponent implements OnInit, OnDestroy {
   }
 
   loadMovieVideo(movieId: number) {
-    this.tmdbService.getMovieVideos(movieId).subscribe(
+    this.tmdbService.getMovieVideos(movieId).pipe(
+      takeUntil(this.destroy$)
+    ).subscribe(
       (data) => {
         const video = data.results.find((vid: MovieVideo) => vid.type === 'Trailer' && vid.site === 'YouTube');
-        if (video) {
-          this.selectedMovieVideo = `https://www.youtube.com/embed/${video.key}`;
-        } else {
-          this.selectedMovieVideo = null;
-        }
+        this.selectedMovieVideo = video ? `https://www.youtube.com/embed/${video.key}` : null;
       },
       (error) => {
         console.error('Error fetching movie videos:', error);
@@ -118,7 +123,9 @@ export class TrendingMoviesComponent implements OnInit, OnDestroy {
 
 
   fetchTrailer(movieId: number) {
-    this.tmdbService.getMovieVideos(movieId).subscribe(videos => {
+    this.tmdbService.getMovieVideos(movieId).pipe(
+      takeUntil(this.destroy$)
+    ).subscribe(videos => {
       const trailer = videos.results.find((video: MovieVideo) => video.type === 'Trailer' && video.site === 'YouTube');
       if (trailer && this.selectedMovie) {
         this.selectedMovie.trailerUrl = `https://www.youtube.com/embed/${trailer.key}`;
@@ -131,15 +138,22 @@ export class TrendingMoviesComponent implements OnInit, OnDestroy {
   onMovieClick(movie: Movie) {
     this.selectedMovie = movie;
     this.showModal = true;
-    this.fetchTrailer(movie.id);
-    this.tmdbService.getMovieDetails(movie.id).subscribe((details: MovieDetails) => {
+
+    this.tmdbService.getMovieDetails(movie.id).pipe(
+      takeUntil(this.destroy$)
+    ).subscribe((details: MovieDetails) => {
       this.genres = details.genres.map((genre: { name: string }) => genre.name);
+      this.cdr.detectChanges();
     });
 
-    this.tmdbService.getMovieCredits(movie.id).subscribe((credits) => {
+    this.tmdbService.getMovieCredits(movie.id).pipe(
+      takeUntil(this.destroy$)
+    ).subscribe((credits) => {
       this.cast = credits.cast.slice(0, 5);
+      this.cdr.detectChanges();
     });
-    this.cdr.detectChanges();
+
+    this.fetchTrailer(movie.id);
   }
 
   closeModal() {

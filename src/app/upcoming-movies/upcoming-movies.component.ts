@@ -7,7 +7,8 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { Movie, MovieVideo } from '../interfaces/movie';
 import { CastMember } from '../interfaces/credits';
 import { Genre } from '../interfaces/genre';
-import { Subscription } from 'rxjs';
+import { Subscription, Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-upcoming-movies',
@@ -28,6 +29,7 @@ export class UpcomingMoviesComponent implements OnInit, OnDestroy {
   selectedMovie: Movie | null = null;
 
   private languageChangeSub: Subscription | null = null;
+  private destroy$ = new Subject<void>();
 
   constructor(private tmdbService: TmdbService, private cdr: ChangeDetectorRef, private translate: TranslateService) { }
 
@@ -40,6 +42,10 @@ export class UpcomingMoviesComponent implements OnInit, OnDestroy {
 
   }
   ngOnDestroy() {
+
+    this.destroy$.next();
+    this.destroy$.complete();
+
     if (this.languageChangeSub) {
       this.languageChangeSub.unsubscribe();
     }
@@ -81,41 +87,58 @@ export class UpcomingMoviesComponent implements OnInit, OnDestroy {
   }
 
   fetchUpcomingMovies() {
-    this.tmdbService.getUpcomingMovies().subscribe(
-      (data) => {
-        this.upcomingMovies = data.results;
-        this.cdr.detectChanges();
-        this.initSwiper();
-      },
-      (error) => {
-        console.error('Error fetching upcoming movies:', error);
-      }
-    );
+    this.tmdbService
+      .getUpcomingMovies()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(
+        (data) => {
+          this.upcomingMovies = data.results;
+          this.cdr.detectChanges();
+          this.initSwiper();
+        },
+        (error) => {
+          console.error('Error fetching upcoming movies:', error);
+        }
+      );
   }
 
   fetchTrailer(movieId: number) {
-    this.tmdbService.getMovieVideos(movieId).subscribe(videos => {
-      const trailer = videos.results.find((video: MovieVideo) => video.type === 'Trailer' && video.site === 'YouTube');
-      if (trailer && this.selectedMovie) {
-        this.selectedMovie.trailerUrl = `https://www.youtube.com/embed/${trailer.key}`;
-      } else if (this.selectedMovie) {
-        this.selectedMovie.trailerUrl = null;
-      }
-    });
+    this.tmdbService
+      .getMovieVideos(movieId)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((videos) => {
+        const trailer = videos.results.find(
+          (video: MovieVideo) => video.type === 'Trailer' && video.site === 'YouTube'
+        );
+        if (trailer && this.selectedMovie) {
+          this.selectedMovie.trailerUrl = `https://www.youtube.com/embed/${trailer.key}`;
+        } else if (this.selectedMovie) {
+          this.selectedMovie.trailerUrl = null;
+        }
+      });
   }
 
   onMovieClick(movie: Movie) {
     this.selectedMovie = movie;
     this.showModal = true;
-    this.fetchTrailer(movie.id);
-    this.tmdbService.getMovieDetails(movie.id).subscribe((details) => {
-      this.genres = details.genres.map((genre: Genre) => genre.name);
-    });
 
-    this.tmdbService.getMovieCredits(movie.id).subscribe((credits) => {
-      this.cast = credits.cast.slice(0, 5);
-    });
-    this.cdr.detectChanges();
+    this.tmdbService
+      .getMovieDetails(movie.id)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((details) => {
+        this.genres = details.genres.map((genre: Genre) => genre.name);
+        this.cdr.detectChanges();
+      });
+
+    this.tmdbService
+      .getMovieCredits(movie.id)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((credits) => {
+        this.cast = credits.cast.slice(0, 5);
+        this.cdr.detectChanges();
+      });
+
+    this.fetchTrailer(movie.id);
   }
 
   closeModal() {
