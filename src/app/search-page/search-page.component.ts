@@ -34,6 +34,7 @@ export class SearchPageComponent implements OnInit, OnDestroy {
 
   private languageChangeSubscription!: Subscription;
   private destroy$ = new Subject<void>();
+  private scrollSubject = new Subject<void>();
 
   searchQueryControl = new FormControl('');
 
@@ -54,6 +55,11 @@ export class SearchPageComponent implements OnInit, OnDestroy {
     });
     this.subscribeToLanguageChanges();
     this.setupSearchForm();
+
+    this.scrollSubject.pipe(debounceTime(800)).subscribe(() => {
+      const nextPage = this.currentPage + 1;
+      this.fetchSearchResults(this.query, nextPage);
+    });
   }
 
   ngOnDestroy() {
@@ -149,8 +155,10 @@ export class SearchPageComponent implements OnInit, OnDestroy {
   }
 
   onScroll() {
-    const nextPage = this.currentPage + 1;
-    this.fetchSearchResults(this.query, nextPage);
+    // const nextPage = this.currentPage + 1;
+    // this.fetchSearchResults(this.query, nextPage);
+    this.scrollSubject.next();
+
   }
 
   private setupSearchForm() {
