@@ -57,6 +57,8 @@ export class SearchPageComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
     if (this.languageChangeSubscription) {
       this.languageChangeSubscription.unsubscribe();
     }
