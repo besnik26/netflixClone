@@ -62,7 +62,6 @@ export class UpcomingMoviesComponent implements OnInit, OnDestroy {
 
     this.swiper = new Swiper(this.swiperContainer.nativeElement, {
       spaceBetween: 30,
-      grabCursor: true,
       breakpoints: {
         320: {
           slidesPerView: 2.5

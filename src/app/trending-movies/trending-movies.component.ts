@@ -96,7 +96,7 @@ export class TrendingMoviesComponent implements OnInit, OnDestroy {
       (data) => {
         this.trendingMovies = data.results;
         if (this.trendingMovies.length > 0) {
-          this.loadMovieVideo(this.trendingMovies[0].id);
+          this.loadMovieVideo(this.trendingMovies[0].id, 0);
         }
         this.cdr.detectChanges();
         this.initSwiper();
@@ -107,20 +107,39 @@ export class TrendingMoviesComponent implements OnInit, OnDestroy {
     );
   }
 
-  loadMovieVideo(movieId: number) {
+  loadMovieVideo(movieId: number, index: number = 0) {
+    if (index >= this.trendingMovies.length) {
+      this.selectedMovieVideo = null;
+      return;
+    }
+
     this.tmdbService.getMovieVideos(movieId).pipe(
       takeUntil(this.destroy$)
     ).subscribe(
       (data) => {
         const video = data.results.find((vid: MovieVideo) => vid.type === 'Trailer' && vid.site === 'YouTube');
-        this.selectedMovieVideo = video ? `https://www.youtube.com/embed/${video.key}` : null;
+        if (video) {
+          this.selectedMovieVideo = `https://www.youtube.com/embed/${video.key}`;
+        } else {
+          const nextIndex = index + 1;
+          if (nextIndex < this.trendingMovies.length) {
+            this.loadMovieVideo(this.trendingMovies[nextIndex].id, nextIndex);
+          } else {
+            this.selectedMovieVideo = null;
+          }
+        }
       },
       (error) => {
         console.error('Error fetching movie videos:', error);
+        const nextIndex = index + 1;
+        if (nextIndex < this.trendingMovies.length) {
+          this.loadMovieVideo(this.trendingMovies[nextIndex].id, nextIndex);
+        } else {
+          this.selectedMovieVideo = null;
+        }
       }
     );
   }
-
 
   fetchTrailer(movieId: number) {
     this.tmdbService.getMovieVideos(movieId).pipe(
