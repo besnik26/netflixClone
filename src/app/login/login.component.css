@@ -174,3 +174,12 @@ input.example-right-align {
         min-height: auto;
     }
 }
+
+@media screen and (max-height: 770px) {
+    .main{
+        padding-top: 100px;
+    }
+    .login-container{
+        min-height: auto;
+    }
+}

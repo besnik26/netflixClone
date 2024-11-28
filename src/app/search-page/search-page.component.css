@@ -7,6 +7,7 @@
 .cover-div {
     max-width: 1550px;
     width: 100%;
+    padding: 91px 47px 0 48px;
 }
 
 
@@ -20,7 +21,7 @@
     height: 85vh;
     width: 100%;
     overflow: auto;
-    margin: 91px 47px 0 48px;
+    /* margin: 91px 47px 0 48px; */
 
 
     &::-webkit-scrollbar {
@@ -37,13 +38,13 @@
 
 
 .movie-card {
-    max-width: 175px;
+    max-width: 183px;
     color: white;
     cursor: pointer;
 }
 
 .movie-card img {
-    width: 175px;
+    width: 183px;
     height: auto;
     border-radius: 5px;
 }
@@ -54,11 +55,28 @@
     margin: 350px 0;
     text-align: center;
 }
+@media only screen and (max-width: 1600px) {
+    .cover-div{
+        padding: 91px 27px 0 27px;
+    }
+    .main {
+        height: 81vh;
+    }
+
+    ::ng-deep .cdk-virtual-scroll-orientation-vertical .cdk-virtual-scroll-content-wrapper {
+        display: flex;
+        flex-wrap: wrap;
+        column-gap: 20px;
+        row-gap: 20px;
+    }
+}
 
 @media only screen and (max-width: 768px) {
+    .cover-div{
+        padding: 92px 0 0 0;
+    }
     .main {
         padding: 120px 16px 0 16px;
-        margin: 92px 0 0 0;
         height: 81vh;
     }
 
