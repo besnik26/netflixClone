@@ -15,8 +15,4 @@ import { UpcomingMoviesComponent } from "../upcoming-movies/upcoming-movies.comp
 export class BrowseComponent {
 
 
-  constructor() { }
-
-
-
 }

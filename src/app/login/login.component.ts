@@ -54,22 +54,29 @@ export class LoginComponent {
   }
 
   onSubmit() {
+    this.markFormGroupTouched(this.myForm);
+
     if (this.myForm.valid) {
       const { email, password } = this.myForm.value;
 
-      this.authService.login(email, password).subscribe(users => {
-        if (users.length > 0) {
-
-          this.authService.saveToken('dummy-token');
-          this.router.navigate(['/browse']);
-        } else {
-
-          this.myForm.get('email')?.setErrors({ invalidCredentials: true });
-          this.myForm.get('password')?.setErrors({ invalidCredentials: true });
-        }
-      });
-    } else {
-      this.markFormGroupTouched(this.myForm);
+      if (email?.trim() && password?.trim()) {
+        this.authService.login(email, password).subscribe(users => {
+          if (users.length > 0) {
+            this.authService.saveToken('dummy-token');
+            this.router.navigate(['/browse']);
+          } else {
+            this.setInvalidCredentialsError();
+          }
+        });
+      } else {
+        if (!email?.trim()) this.myForm.get('email')?.setErrors({ required: true });
+        if (!password?.trim()) this.myForm.get('password')?.setErrors({ required: true });
+      }
     }
+  }
+
+  private setInvalidCredentialsError() {
+    this.myForm.get('email')?.setErrors({ invalidCredentials: true });
+    this.myForm.get('password')?.setErrors({ invalidCredentials: true });
   }
 }
