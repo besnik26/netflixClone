@@ -7,7 +7,7 @@ import { Movie, MovieVideo } from '../../interfaces/movie';
 import { CastMember } from '../../interfaces/credits';
 import { Genre } from '../../interfaces/genre';
 import { Subject } from 'rxjs';
-import { takeUntil, } from 'rxjs';
+import { takeUntil,forkJoin } from 'rxjs';
 
 
 @Component({
@@ -84,23 +84,26 @@ export class MovieModalComponent implements OnInit, OnChanges, OnDestroy {
     this.movie = newMovie;
     this.cast = [];
     this.genres = [];
-
-    this.tmdbService.getMovieDetails(newMovie.id).subscribe(details => {
+  
+    const details$ = this.tmdbService.getMovieDetails(newMovie.id);
+    const credits$ = this.tmdbService.getMovieCredits(newMovie.id);
+  
+    forkJoin([details$, credits$]).pipe(
+      takeUntil(this.destroy$) 
+    ).subscribe(([details, credits]) => {
       this.movie = { ...this.movie, ...details };
       this.genres = details.genres.map((genre: Genre) => genre.name);
       this.cdr.detectChanges();
-    });
 
-    this.tmdbService.getMovieCredits(newMovie.id).subscribe(credits => {
       this.cast = credits.cast.slice(0, 5);
-      this.cdr.detectChanges();
+  
+      this.fetchTrailer(newMovie.id);
+      this.fetchSimilarMovies();
+  
+      this.scrollToTop();
     });
-
-    this.fetchTrailer(newMovie.id);
-    this.fetchSimilarMovies();
-
-    this.scrollToTop();
   }
+  
 
   scrollToTop() {
     if (this.modalElement) {
