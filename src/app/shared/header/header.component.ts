@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, HostListener } from '@angular/core';
+import { Component, Input, OnInit, HostListener, OnDestroy } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -11,6 +11,7 @@ import { ElementRef } from '@angular/core';
 import { Router, RouterLink, ActivatedRoute, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { TranslateService, TranslatePipe } from '@ngx-translate/core';
+import { Subscription } from 'rxjs';
 
 
 @Component({
@@ -20,11 +21,12 @@ import { TranslateService, TranslatePipe } from '@ngx-translate/core';
   templateUrl: './header.component.html',
   styleUrl: './header.component.css'
 })
-export class HeaderComponent implements OnInit {
+export class HeaderComponent implements OnInit, OnDestroy {
   menuOpen: boolean = false
   currentRoute?: string;
   @Input() section: string = '';
   myForm!: FormGroup;
+  private routerSubscription!: Subscription;
 
   isOpen = false;
 
@@ -42,7 +44,7 @@ export class HeaderComponent implements OnInit {
       search: ['', Validators.required,]
     })
 
-    this.router.events.pipe(
+    this.routerSubscription = this.router.events.pipe(
       filter(event => event instanceof NavigationEnd)
     ).subscribe(() => {
       this.currentRoute = this.router.url.split('/')[1];
@@ -54,6 +56,12 @@ export class HeaderComponent implements OnInit {
 
   ngOnInit() {
     this.currentRoute = this.router.url.split('/')[1];
+  }
+
+  ngOnDestroy(): void {
+    if(this.routerSubscription){
+      this.routerSubscription.unsubscribe();
+    }
   }
 
   onSubmit() {
