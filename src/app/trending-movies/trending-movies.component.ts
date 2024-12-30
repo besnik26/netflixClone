@@ -5,17 +5,18 @@ import { SafeurlPipe } from '../pipes/safeurl.pipe';
 import { MovieModalComponent } from '../shared/movie-modal/movie-modal.component';
 import { ChangeDetectorRef } from '@angular/core';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { Subscription, Subject } from 'rxjs';
+import { Subscription, Subject, forkJoin } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { Movie, MovieDetails, MovieVideo } from '../interfaces/movie';
+import { Movie, MovieVideo } from '../interfaces/movie';
 import { CastMember } from '../interfaces/credits';
+import { Genre } from '../interfaces/genre';
 
 @Component({
   selector: 'app-trending-movies',
   standalone: true,
   imports: [SafeurlPipe, MovieModalComponent, TranslatePipe],
   templateUrl: './trending-movies.component.html',
-  styleUrl: './trending-movies.component.css'
+  styleUrl: './trending-movies.component.css',
 })
 export class TrendingMoviesComponent implements OnInit, OnDestroy {
   @ViewChild('swiperContainer') swiperContainer!: ElementRef;
@@ -154,25 +155,29 @@ export class TrendingMoviesComponent implements OnInit, OnDestroy {
     });
   }
 
+
   onMovieClick(movie: Movie) {
     this.selectedMovie = movie;
     this.showModal = true;
 
-    this.tmdbService.getMovieDetails(movie.id).pipe(
-      takeUntil(this.destroy$)
-    ).subscribe((details: MovieDetails) => {
-      this.genres = details.genres.map((genre: { name: string }) => genre.name);
-      this.cdr.detectChanges();
-    });
+    const details$ = this.tmdbService.getMovieDetails(movie.id);
+    const credits$ = this.tmdbService.getMovieCredits(movie.id);
 
-    this.tmdbService.getMovieCredits(movie.id).pipe(
+    forkJoin([details$, credits$]).pipe(
       takeUntil(this.destroy$)
-    ).subscribe((credits) => {
-      this.cast = credits.cast.slice(0, 5);
-      this.cdr.detectChanges();
-    });
+    ).subscribe(
+      ([details, credits]) => {
+        this.genres = details.genres.map((genre: Genre) => genre.name);
+        this.cast = credits.cast.slice(0, 5);
 
-    this.fetchTrailer(movie.id);
+        this.fetchTrailer(movie.id);
+
+        this.cdr.detectChanges();
+      },
+      (error) => {
+        console.error('Error fetching movie details or credits:', error);
+      }
+    );
   }
 
   closeModal() {

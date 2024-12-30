@@ -1,4 +1,4 @@
-import { Component, ElementRef, ViewChild, OnInit, OnDestroy } from '@angular/core';
+import { Component, ElementRef, ViewChild, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
 import Swiper from 'swiper';
 import { TmdbService } from '../services/tmdb.service';
 import { MovieModalComponent } from '../shared/movie-modal/movie-modal.component';
@@ -6,9 +6,9 @@ import { ChangeDetectorRef } from '@angular/core';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { Movie, MovieVideo } from '../interfaces/movie';
 import { CastMember } from '../interfaces/credits';
-import { Genre } from '../interfaces/genre';
-import { Subscription, Subject } from 'rxjs';
+import { Subscription, Subject, forkJoin } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { Genre } from '../interfaces/genre';
 
 
 @Component({
@@ -16,7 +16,8 @@ import { takeUntil } from 'rxjs/operators';
   standalone: true,
   imports: [MovieModalComponent, TranslatePipe],
   templateUrl: './top-rated-movies.component.html',
-  styleUrl: './top-rated-movies.component.css'
+  styleUrl: './top-rated-movies.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TopRatedMoviesComponent implements OnInit, OnDestroy {
 
@@ -125,23 +126,27 @@ export class TopRatedMoviesComponent implements OnInit, OnDestroy {
   onMovieClick(movie: Movie) {
     this.selectedMovie = movie;
     this.showModal = true;
-    this.fetchTrailer(movie.id);
 
-    this.tmdbService
-      .getMovieDetails(movie.id)
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((details) => {
+    const details$ = this.tmdbService.getMovieDetails(movie.id);
+    const credits$ = this.tmdbService.getMovieCredits(movie.id);
+
+    forkJoin([details$, credits$]).pipe(
+      takeUntil(this.destroy$)
+    ).subscribe(
+      ([details, credits]) => {
         this.genres = details.genres.map((genre: Genre) => genre.name);
-        this.cdr.detectChanges();
-      });
-    this.tmdbService
-      .getMovieCredits(movie.id)
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((credits) => {
         this.cast = credits.cast.slice(0, 5);
+
+        this.fetchTrailer(movie.id);
+
         this.cdr.detectChanges();
-      });
+      },
+      (error) => {
+        console.error('Error fetching movie details or credits:', error);
+      }
+    );
   }
+
   closeModal() {
     this.showModal = false;
     this.selectedMovie = null

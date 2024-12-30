@@ -4,7 +4,7 @@ import { TmdbService } from '../services/tmdb.service';
 import { MovieModalComponent } from '../shared/movie-modal/movie-modal.component';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { Subject, Subscription } from 'rxjs';
+import { Subject, Subscription, takeUntil } from 'rxjs';
 import { debounceTime, distinctUntilChanged, switchMap, catchError } from 'rxjs/operators';
 import { Movie, MovieDetails, MovieVideo } from '../interfaces/movie';
 import { CastMember, Credits } from '../interfaces/credits';
@@ -46,7 +46,7 @@ export class SearchPageComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
 
-    this.route.queryParams.subscribe(params => {
+    this.route.queryParams.pipe(takeUntil(this.destroy$)).subscribe(params => {
       this.query = params['query'] || '';
       if (this.query) {
         this.resetSearch();
@@ -56,7 +56,7 @@ export class SearchPageComponent implements OnInit, OnDestroy {
     this.subscribeToLanguageChanges();
     this.setupSearchForm();
 
-    this.scrollSubject.pipe(debounceTime(800)).subscribe(() => {
+    this.scrollSubject.pipe(debounceTime(800), takeUntil(this.destroy$)).subscribe(() => {
       const nextPage = this.currentPage + 1;
       this.fetchSearchResults(this.query, nextPage);
     });
@@ -93,7 +93,7 @@ export class SearchPageComponent implements OnInit, OnDestroy {
   }
 
   private subscribeToLanguageChanges() {
-    this.languageChangeSubscription = this.translateService.onLangChange.subscribe(() => {
+    this.languageChangeSubscription = this.translateService.onLangChange.pipe(takeUntil(this.destroy$)).subscribe(() => {
       this.resetSearch();
       this.fetchSearchResults(this.query, this.currentPage);
     });
@@ -102,7 +102,7 @@ export class SearchPageComponent implements OnInit, OnDestroy {
 
 
   refetchSelectedMovie(movieId: number) {
-    this.tmdbService.getMovieDetails(movieId).subscribe((movieDetails: MovieDetails) => {
+    this.tmdbService.getMovieDetails(movieId).pipe(takeUntil(this.destroy$)).subscribe((movieDetails: MovieDetails) => {
       this.selectedMovie = {
         ...this.selectedMovie,
         ...movieDetails
@@ -110,13 +110,13 @@ export class SearchPageComponent implements OnInit, OnDestroy {
       this.genres = movieDetails.genres.map((g: Genre) => g.name);
     });
 
-    this.tmdbService.getMovieCredits(movieId).subscribe((credits: Credits) => {
+    this.tmdbService.getMovieCredits(movieId).pipe(takeUntil(this.destroy$)).subscribe((credits: Credits) => {
       this.cast = credits.cast.slice(0, 5);
     });
   }
 
   fetchTrailer(movieId: number) {
-    this.tmdbService.getMovieVideos(movieId).subscribe((videos: ApiResponse<MovieVideo>) => {
+    this.tmdbService.getMovieVideos(movieId).pipe(takeUntil(this.destroy$)).subscribe((videos: ApiResponse<MovieVideo>) => {
       const trailer = videos.results.find((video: MovieVideo) => video.type === 'Trailer' && video.site === 'YouTube');
 
       if (this.selectedMovie) {
@@ -139,7 +139,7 @@ export class SearchPageComponent implements OnInit, OnDestroy {
     if (this.isFetching) return;
     this.isFetching = true;
 
-    this.tmdbService.searchMovies(query, page).subscribe(
+    this.tmdbService.searchMovies(query, page).pipe(takeUntil(this.destroy$)).subscribe(
       (response) => {
         if (response.results.length) {
           this.searchResults = [...this.searchResults, ...response.results];
@@ -155,8 +155,6 @@ export class SearchPageComponent implements OnInit, OnDestroy {
   }
 
   onScroll() {
-    // const nextPage = this.currentPage + 1;
-    // this.fetchSearchResults(this.query, nextPage);
     this.scrollSubject.next();
 
   }
@@ -173,7 +171,8 @@ export class SearchPageComponent implements OnInit, OnDestroy {
       catchError(error => {
         console.error('Error during search:', error);
         return [];
-      })
+      }),
+      takeUntil(this.destroy$)
     ).subscribe(response => {
       this.searchResults = response.results;
     });
