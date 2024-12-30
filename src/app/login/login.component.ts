@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { Component, OnDestroy, signal } from '@angular/core';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import {
@@ -7,6 +7,7 @@ import {
   ReactiveFormsModule,
   Validators
 } from "@angular/forms";
+import { Subject, takeUntil } from 'rxjs';
 import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 
@@ -17,12 +18,19 @@ import { AuthService } from '../services/auth.service';
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })
-export class LoginComponent {
+export class LoginComponent implements OnDestroy {
   hide = signal(true);
   myForm!: FormGroup;
 
+  private destroy$ = new Subject<void>();
+
   constructor(private formBuilder: FormBuilder, private router: Router, private authService: AuthService) {
     this.buildForm();
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   private buildForm() {
@@ -31,12 +39,12 @@ export class LoginComponent {
       password: ['', Validators.required]
     })
 
-    this.myForm.get('email')?.valueChanges.subscribe(() => {
+    this.myForm.get('email')?.valueChanges.pipe(takeUntil(this.destroy$)).subscribe(() => {
       this.myForm.get('email')?.setErrors(null);
       this.myForm.get('password')?.setErrors(null);
     });
 
-    this.myForm.get('password')?.valueChanges.subscribe(() => {
+    this.myForm.get('password')?.valueChanges.pipe(takeUntil(this.destroy$)).subscribe(() => {
       this.myForm.get('email')?.setErrors(null);
       this.myForm.get('password')?.setErrors(null);
     });
@@ -60,7 +68,7 @@ export class LoginComponent {
       const { email, password } = this.myForm.value;
 
       if (email?.trim() && password?.trim()) {
-        this.authService.login(email, password).subscribe(users => {
+        this.authService.login(email, password).pipe(takeUntil(this.destroy$)).subscribe(users => {
           if (users.length > 0) {
             this.authService.saveToken('dummy-token');
             this.router.navigate(['/browse']);
