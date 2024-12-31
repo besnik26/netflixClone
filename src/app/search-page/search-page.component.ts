@@ -83,11 +83,11 @@ export class SearchPageComponent implements OnInit, OnDestroy {
   }
 
   fetchAdditionalDetails(movieId: number) {
-    this.tmdbService.getMovieDetails(movieId).subscribe((details: MovieDetails) => {
+    this.tmdbService.getMovieDetails(movieId).pipe(takeUntil(this.destroy$)).subscribe((details: MovieDetails) => {
       this.genres = details.genres.map((g: Genre) => g.name);
     });
 
-    this.tmdbService.getMovieCredits(movieId).subscribe((credits: Credits) => {
+    this.tmdbService.getMovieCredits(movieId).pipe(takeUntil(this.destroy$)).subscribe((credits: Credits) => {
       this.cast = credits.cast.slice(0, 5);
     });
   }
