@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { TmdbService } from '../services/tmdb.service';
 import Swiper from 'swiper';
 import { SafeurlPipe } from '../pipes/safeurl.pipe';
@@ -17,6 +17,7 @@ import { Genre } from '../interfaces/genre';
   imports: [SafeurlPipe, MovieModalComponent, TranslatePipe],
   templateUrl: './trending-movies.component.html',
   styleUrl: './trending-movies.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TrendingMoviesComponent implements OnInit, OnDestroy {
   @ViewChild('swiperContainer') swiperContainer!: ElementRef;
@@ -121,12 +122,14 @@ export class TrendingMoviesComponent implements OnInit, OnDestroy {
         const video = data.results.find((vid: MovieVideo) => vid.type === 'Trailer' && vid.site === 'YouTube');
         if (video) {
           this.selectedMovieVideo = `https://www.youtube.com/embed/${video.key}`;
+          this.cdr.detectChanges();
         } else {
           const nextIndex = index + 1;
           if (nextIndex < this.trendingMovies.length) {
             this.loadMovieVideo(this.trendingMovies[nextIndex].id, nextIndex);
           } else {
             this.selectedMovieVideo = null;
+            this.cdr.detectChanges();
           }
         }
       },
@@ -153,6 +156,7 @@ export class TrendingMoviesComponent implements OnInit, OnDestroy {
         this.selectedMovie.trailerUrl = null;
       }
     });
+    this.cdr.detectChanges()
   }
 
 

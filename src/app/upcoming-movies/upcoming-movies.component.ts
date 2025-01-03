@@ -1,8 +1,7 @@
-import { Component, ElementRef, ViewChild, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ElementRef, ViewChild, OnInit, OnDestroy, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
 import Swiper from 'swiper';
 import { TmdbService } from '../services/tmdb.service';
 import { MovieModalComponent } from '../shared/movie-modal/movie-modal.component';
-import { ChangeDetectorRef } from '@angular/core';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { Movie, MovieVideo } from '../interfaces/movie';
 import { CastMember } from '../interfaces/credits';
@@ -115,6 +114,7 @@ export class UpcomingMoviesComponent implements OnInit, OnDestroy {
         } else if (this.selectedMovie) {
           this.selectedMovie.trailerUrl = null;
         }
+        this.cdr.detectChanges();
       });
   }
 
@@ -130,10 +130,8 @@ export class UpcomingMoviesComponent implements OnInit, OnDestroy {
     ).subscribe(
       ([details, credits]) => {
         this.genres = details.genres.map((genre: Genre) => genre.name);
-        this.cast = credits.cast.slice(0, 5);
-
         this.fetchTrailer(movie.id);
-
+        this.cast = credits.cast.slice(0, 5);
         this.cdr.detectChanges();
       },
       (error) => {

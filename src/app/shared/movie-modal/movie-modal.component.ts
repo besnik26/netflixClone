@@ -77,7 +77,6 @@ export class MovieModalComponent implements OnInit, OnChanges, OnDestroy {
     ).subscribe(videos => {
       const trailer = videos.results.find((video: MovieVideo) => video.type === 'Trailer' && video.site === 'YouTube');
       this.movie.trailerUrl = trailer ? `https://www.youtube.com/embed/${trailer.key}` : null;
-      this.cdr.detectChanges();
     });
   }
 
@@ -94,14 +93,12 @@ export class MovieModalComponent implements OnInit, OnChanges, OnDestroy {
     ).subscribe(([details, credits]) => {
       this.movie = { ...this.movie, ...details };
       this.genres = details.genres.map((genre: Genre) => genre.name);
-      this.cdr.detectChanges();
-
       this.cast = credits.cast.slice(0, 5);
-
+      this.cdr.detectChanges()
       this.fetchTrailer(newMovie.id);
       this.fetchSimilarMovies();
-
       this.scrollToTop();
+
     });
   }
 
