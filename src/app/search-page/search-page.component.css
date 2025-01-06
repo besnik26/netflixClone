@@ -42,7 +42,7 @@
 }
 
 .movie-card img {
-    width: 183px;
+    width: 100%;
     height: auto;
     border-radius: 5px;
 }
@@ -73,30 +73,17 @@
     .movie-card {
         max-width: 192px;
     }
-
-    .movie-card img {
-        width: 192px;
-    }
 }
 
 @media only screen and (max-width: 1518px) {
     .movie-card {
         max-width: 186px;
     }
-
-    .movie-card img {
-        width: 186px;
-    }
-
 }
 
 @media only screen and (max-width: 1476px) {
     .movie-card {
         max-width: 180px;
-    }
-
-    .movie-card img {
-        width: 180px;
     }
 }
 
@@ -104,19 +91,11 @@
     .movie-card {
         max-width: 174px;
     }
-
-    .movie-card img {
-        width: 174px;
-    }
 }
 
 @media only screen and (max-width: 1392px) {
     .movie-card {
         max-width: 168px;
-    }
-
-    .movie-card img {
-        width: 168px;
     }
 }
 
@@ -124,19 +103,11 @@
     .movie-card {
         max-width: 160px;
     }
-
-    .movie-card img {
-        width: 160px;
-    }
 }
 
 @media only screen and (max-width: 1294px) {
     .movie-card {
         max-width: 152px;
-    }
-
-    .movie-card img {
-        width: 152px;
     }
 }
 
@@ -144,19 +115,11 @@
     .movie-card {
         max-width: 145px;
     }
-
-    .movie-card img {
-        width: 145px;
-    }
 }
 
 @media only screen and (max-width: 1189px) {
     .movie-card {
         max-width: 164px;
-    }
-
-    .movie-card img {
-        width: 164px;
     }
 }
 
@@ -164,19 +127,11 @@
     .movie-card {
         max-width: 154px;
     }
-
-    .movie-card img {
-        width: 154px;
-    }
 }
 
 @media only screen and (max-width: 1078px) {
     .movie-card {
         max-width: 145px;
-    }
-
-    .movie-card img {
-        width: 145px;
     }
 }
 
@@ -184,19 +139,11 @@
     .movie-card {
         max-width: 137px;
     }
-
-    .movie-card img {
-        width: 137px;
-    }
 }
 
 @media only screen and (max-width: 976px) {
     .movie-card {
         max-width: 129px;
-    }
-
-    .movie-card img {
-        width: 129px;
     }
 }
 
@@ -224,15 +171,8 @@
         color: white;
     }
 
-    .movie-card img {
-        width: 130px;
-        height: auto;
-        border-radius: 5px;
-    }
-
     .not-found {
         margin: 350px 0 250px 0;
         padding: 0 16px;
-
     }
 }

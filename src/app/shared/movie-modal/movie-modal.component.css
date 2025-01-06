@@ -97,7 +97,7 @@ iframe {
 }
 
 .similar-movie-item {
-    max-width: 230px;
+    max-width: 31%;
     background-color: rgb(46, 46, 46);
     color: lightgray;
     border-radius: 4px;
@@ -105,7 +105,7 @@ iframe {
 }
 
 .similar-movie-item img {
-    width: 230px;
+    width: 100%;
     height: auto;
 }
 
@@ -145,15 +145,7 @@ ul {
 @media only screen and (max-width: 890px) {
     .modal {
         width: 95%;
-        max-height: 80vh;
-    }
-
-    .similar-movie-item {
-        max-width: 219px;
-    }
-
-    .similar-movie-item img {
-        width: 219px;
+        max-height: 85vh;
     }
 
     iframe {
@@ -163,6 +155,9 @@ ul {
 }
 
 @media only screen and (max-width: 768px) {
+    .modal {
+        padding: 16px;
+    }
 
     .close-button {
         height: 42px;
@@ -191,7 +186,7 @@ ul {
     }
 
     .details-encapsulation {
-        padding: 16px;
+        padding: 16px 0px;
     }
 
     .details {
@@ -205,35 +200,22 @@ ul {
     .similar-movie-list {
         column-gap: 13px;
         row-gap: 13px;
-        justify-content: center;
     }
 
     .similar-movie-item {
-        max-width: 195px;
+        max-width: 31%;
     }
 
-    .similar-movie-item img {
-        width: 195px;
+}
+
+@media only screen and (max-width: 570px) {
+    .similar-movie-item {
+        max-width: 48%;
     }
 }
 
-@media only screen and (max-width: 650px) {
+@media only screen and (max-width: 379px) {
     .similar-movie-item {
-        max-width: 163px;
-    }
-
-    .similar-movie-item img {
-        width: 163px;
-    }
-}
-
-
-@media only screen and (max-width: 400px) {
-    .similar-movie-item {
-        max-width: 125px;
-    }
-
-    .similar-movie-item img {
-        width: 125px;
+        max-width: 47%;
     }
 }
