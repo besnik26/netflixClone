@@ -36,7 +36,7 @@
 
 
 .movie-card {
-    max-width: 183px;
+    max-width: 12.5%;
     color: white;
     cursor: pointer;
 }
@@ -69,84 +69,19 @@
         column-gap: 20px;
         row-gap: 20px;
     }
+}
 
+@media only screen and (max-width: 1014px) {
     .movie-card {
-        max-width: 192px;
+        max-width: 12.1%;
     }
 }
 
-@media only screen and (max-width: 1518px) {
+@media only screen and (max-width: 839px) {
     .movie-card {
-        max-width: 186px;
+        max-width: 17.3%;
     }
 }
-
-@media only screen and (max-width: 1476px) {
-    .movie-card {
-        max-width: 180px;
-    }
-}
-
-@media only screen and (max-width: 1433px) {
-    .movie-card {
-        max-width: 174px;
-    }
-}
-
-@media only screen and (max-width: 1392px) {
-    .movie-card {
-        max-width: 168px;
-    }
-}
-
-@media only screen and (max-width: 1350px) {
-    .movie-card {
-        max-width: 160px;
-    }
-}
-
-@media only screen and (max-width: 1294px) {
-    .movie-card {
-        max-width: 152px;
-    }
-}
-
-@media only screen and (max-width: 1238px) {
-    .movie-card {
-        max-width: 145px;
-    }
-}
-
-@media only screen and (max-width: 1189px) {
-    .movie-card {
-        max-width: 164px;
-    }
-}
-
-@media only screen and (max-width: 1138px) {
-    .movie-card {
-        max-width: 154px;
-    }
-}
-
-@media only screen and (max-width: 1078px) {
-    .movie-card {
-        max-width: 145px;
-    }
-}
-
-@media only screen and (max-width: 1024px) {
-    .movie-card {
-        max-width: 137px;
-    }
-}
-
-@media only screen and (max-width: 976px) {
-    .movie-card {
-        max-width: 129px;
-    }
-}
-
 
 @media only screen and (max-width: 768px) {
     .cover-div {
@@ -163,16 +98,23 @@
         flex-wrap: wrap;
         column-gap: 15px;
         row-gap: 15px;
-        justify-content: center;
-    }
 
-    .movie-card {
-        max-width: 130px;
-        color: white;
     }
 
     .not-found {
         margin: 350px 0 250px 0;
         padding: 0 16px;
+    }
+}
+
+@media only screen and (max-width: 600px) {
+    .movie-card {
+        max-width: 22%;
+    }
+}
+
+@media only screen and (max-width: 400px) {
+    .movie-card {
+        max-width: 30%;
     }
 }
