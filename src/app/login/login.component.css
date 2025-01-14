@@ -1,16 +1,16 @@
 .main {
     display: flex;
     justify-content: center;
-    padding-top: 200px;
+    padding-top: 140px;
 }
 
 .login-container {
     max-width: 450px;
     width: 100%;
     background-color: rgba(0, 0, 0, 0.7);
-    min-height: 607px;
+    min-height: 580px;
     padding: 48px 68px;
-    border-radius: 4px;
+    border-radius: 6px;
 }
 
 .login-form {
@@ -167,19 +167,30 @@ input.example-right-align {
     cursor: pointer;
 }
 
-@media only screen and (max-width: 768px) {
+@media only screen and (max-width: 600px) {
+    .main {
+        padding-top: 130px;
+    }
+
     .login-container {
         margin: 0 16px;
-        padding: 45px 35px;
+        padding: 40px 35px 60px 35px;
         min-height: auto;
+    }
+
+    .new-to-netflix h3 {
+        font-size: 16px;
+        font-weight: 400;
+        margin: 40px 0 15px 0;
     }
 }
 
 @media screen and (max-height: 770px) {
-    .main{
+    .main {
         padding-top: 100px;
     }
-    .login-container{
+
+    .login-container {
         min-height: auto;
     }
 }
