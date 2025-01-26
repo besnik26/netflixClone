@@ -33,8 +33,9 @@ export class TrendingMoviesComponent implements OnInit, OnDestroy {
   cast: CastMember[] = [];
   showModal: boolean = false;
   selectedMovie: Movie | null = null;
-  private languageChangeSub: Subscription | null = null;
 
+
+  private languageChangeSub: Subscription | null = null;
   private destroy$ = new Subject<void>();
 
   constructor(private tmdbService: TmdbService, private cdr: ChangeDetectorRef, private translateService: TranslateService) { }
@@ -57,8 +58,6 @@ export class TrendingMoviesComponent implements OnInit, OnDestroy {
       this.swiper.destroy();
     }
   }
-
-
 
   initSwiper() {
 
