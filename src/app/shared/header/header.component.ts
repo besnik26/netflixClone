@@ -24,6 +24,7 @@ import { Subscription } from 'rxjs';
 export class HeaderComponent implements OnInit, OnDestroy {
   menuOpen: boolean = false
   currentRoute?: string;
+  isSearching = false;
   @Input() section: string = '';
   myForm!: FormGroup;
   private routerSubscription!: Subscription;
@@ -59,17 +60,22 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    if(this.routerSubscription){
+    if (this.routerSubscription) {
       this.routerSubscription.unsubscribe();
     }
   }
 
   onSubmit() {
-    if (this.myForm.valid) {
+    if (this.myForm.valid && !this.isSearching) {
+      this.isSearching = true;
       const query = this.myForm.value.search;
       this.router.navigate(['/search'], { queryParams: { query } });
       this.scrollToTop();
       this.menuOpen = false;
+
+      setTimeout(() => {
+        this.isSearching = false;
+      }, 1000);
     }
   }
   toggleDropdown() {

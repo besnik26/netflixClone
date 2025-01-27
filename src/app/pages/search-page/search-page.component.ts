@@ -5,7 +5,7 @@ import { MovieModalComponent } from '../../shared/movie-modal/movie-modal.compon
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { Subject, Subscription, takeUntil } from 'rxjs';
-import { debounceTime, distinctUntilChanged, switchMap, catchError } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 import { Movie, MovieDetails, MovieVideo } from '../../interfaces/movie';
 import { CastMember, Credits } from '../../interfaces/credits';
 import { ApiResponse } from '../../interfaces/api-response';
@@ -45,7 +45,6 @@ export class SearchPageComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-
     this.route.queryParams.pipe(takeUntil(this.destroy$)).subscribe(params => {
       this.query = params['query'] || '';
       if (this.query) {
@@ -98,8 +97,6 @@ export class SearchPageComponent implements OnInit, OnDestroy {
       this.fetchSearchResults(this.query, this.currentPage);
     });
   }
-
-
 
   refetchSelectedMovie(movieId: number) {
     this.tmdbService.getMovieDetails(movieId).pipe(takeUntil(this.destroy$)).subscribe((movieDetails: MovieDetails) => {
@@ -155,28 +152,23 @@ export class SearchPageComponent implements OnInit, OnDestroy {
   }
 
   onScroll() {
+    if (this.isFetching) return;
     this.scrollSubject.next();
-
   }
 
-  private setupSearchForm() {
-    this.searchQueryControl.valueChanges.pipe(
-      debounceTime(300),
-      distinctUntilChanged(),
-      switchMap(query => {
-        const searchQuery = query || '';
-        this.resetSearch();
-        return this.tmdbService.searchMovies(searchQuery, 1);
-      }),
-      catchError(error => {
-        console.error('Error during search:', error);
-        return [];
-      }),
-      takeUntil(this.destroy$)
-    ).subscribe(response => {
-      this.searchResults = response.results;
-    });
+  setupSearchForm() {
+    this.searchQueryControl.valueChanges
+      .pipe(
+        debounceTime(500),
+        distinctUntilChanged(),
+        switchMap((query) => {
+          this.resetSearch();
+          return this.tmdbService.searchMovies(query || '', 1);
+        }),
+        takeUntil(this.destroy$)
+      )
+      .subscribe((response) => {
+        this.searchResults = response.results;
+      });
   }
-
-
 }
