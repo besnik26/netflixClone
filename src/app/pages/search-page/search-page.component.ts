@@ -1,15 +1,15 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { TmdbService } from '../services/tmdb.service';
-import { MovieModalComponent } from '../shared/movie-modal/movie-modal.component';
+import { TmdbService } from '../../services/tmdb.service';
+import { MovieModalComponent } from '../../shared/movie-modal/movie-modal.component';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { Subject, Subscription, takeUntil } from 'rxjs';
 import { debounceTime, distinctUntilChanged, switchMap, catchError } from 'rxjs/operators';
-import { Movie, MovieDetails, MovieVideo } from '../interfaces/movie';
-import { CastMember, Credits } from '../interfaces/credits';
-import { ApiResponse } from '../interfaces/api-response';
-import { Genre } from '../interfaces/genre';
+import { Movie, MovieDetails, MovieVideo } from '../../interfaces/movie';
+import { CastMember, Credits } from '../../interfaces/credits';
+import { ApiResponse } from '../../interfaces/api-response';
+import { Genre } from '../../interfaces/genre';
 import { FormControl } from '@angular/forms';
 
 @Component({

@@ -1,11 +1,11 @@
 import { Component, ElementRef, ViewChild, OnInit, OnDestroy, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
 import Swiper from 'swiper';
-import { TmdbService } from '../services/tmdb.service';
-import { MovieModalComponent } from '../shared/movie-modal/movie-modal.component';
+import { TmdbService } from '../../services/tmdb.service';
+import { MovieModalComponent } from '../../shared/movie-modal/movie-modal.component';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { Movie, MovieVideo } from '../interfaces/movie';
-import { CastMember } from '../interfaces/credits';
-import { Genre } from '../interfaces/genre';
+import { Movie, MovieVideo } from '../../interfaces/movie';
+import { CastMember } from '../../interfaces/credits';
+import { Genre } from '../../interfaces/genre';
 import { Subscription, Subject, forkJoin } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 

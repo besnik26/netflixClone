@@ -1,8 +1,7 @@
 import { Component } from '@angular/core';
-import { TrendingMoviesComponent } from "../trending-movies/trending-movies.component";
-import { TopRatedMoviesComponent } from "../top-rated-movies/top-rated-movies.component";
-import { UpcomingMoviesComponent } from "../upcoming-movies/upcoming-movies.component";
-
+import { TrendingMoviesComponent } from '../../components/trending-movies/trending-movies.component';
+import { TopRatedMoviesComponent } from '../../components/top-rated-movies/top-rated-movies.component';
+import { UpcomingMoviesComponent } from '../../components/upcoming-movies/upcoming-movies.component';
 
 @Component({
   selector: 'app-browse',
