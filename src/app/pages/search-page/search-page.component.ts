@@ -45,7 +45,7 @@ export class SearchPageComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-    this.route.queryParams.pipe(takeUntil(this.destroy$)).subscribe(params => {
+    this.route.queryParams.pipe(debounceTime(300), takeUntil(this.destroy$)).subscribe(params => {
       this.query = params['query'] || '';
       if (this.query) {
         this.resetSearch();
